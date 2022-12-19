@@ -9,3 +9,26 @@ A small spaceship game where you need to fix problems to keep the craft flying.
  - The player has 5 minutes to fix a number of issues (TBD) to save the ship
  - If the player doesn't fix the number of issues in time, the ship goes into a sun (cut scene)
  - Need a win cut scene
+
+### Room Types
+ - Engine
+ - Bridge
+ - Hydroponics
+ - Medical Bay
+ - Crew Quarters
+ - Air Lock
+ - Weapons systems
+ - Utilities/Comms
+ 
+### Mini-Games/Crisis exercises
+ - Rewiring the helper bot
+ - Putting out fires
+ - Asteroids, fire guns/lasers to destroy them
+ - Log into comms to send a mayday
+ - Cook dinner
+ - Take out garbage - jettison
+ - Fix the oxygen system
+ - Duct tape the holes in the hull
+ - Purge toilets
+ - Fix electircal systems
+ - Water your plants
