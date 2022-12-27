@@ -7,48 +7,65 @@ using UnityEngine;
 public class AnimationMoveController : MonoBehaviour
 {
     // declare references;
-    InputControl inputControl;
-    CharacterController characterController;
-    Animator animator;
-    Rigidbody rb;
+    private InputControl inputControl;
+    private CharacterController characterController;
+    private Animator animator;
+    private Rigidbody rb;
+
+
 
     // player movement input variables;
-    float currentMovementInput;
-    float currentMovement;
-    float currentRunMovement;
-    [SerializeField] float walkSpeed = 1.2f;
-    [SerializeField] float runSpeed = 3.0f;
-    Vector3 input;
-    bool isMovementPressed;
-    bool isRunPressed;
+    [Header("Movement")]
+    private Vector3 input;
+    private float currentMovementInput;
+    private float currentMovement;
+    private float currentRunMovement;
+    [SerializeField] private float walkSpeed = 1.4f;
+    [SerializeField] private float runSpeed = 3.4f;
 
     // Character rotation variables;
-    float rotationFactorPerFrame = 5f;
-    Vector3 positionToLookAt;
+    [Header("Rotation")]
+    [SerializeField] private float rotationFactorPerFrame = 8f;
+    private Vector3 positionToLookAt;
+    [SerializeField] private Quaternion currentQ;
+
+    // Animation Variables
+    [Header("Animation Bools")]
+    [SerializeField] private bool isMovementPressed;
+    [SerializeField] private bool isRunPressed;
+
+    // Parameter Hashing - Performance Optimization
+    int isWalkingHash;
+    int isRunningHash;
 
     // set climb variables;
     [Header("Player Step Climb")]
-    [SerializeField] GameObject stepRayUpper;
-    [SerializeField] GameObject stepRayLower;
-    [SerializeField] float stepHeight = 0.3f;
-    [SerializeField] float stepSmooth = 0.1f;
+    [SerializeField] private GameObject stepRayUpper;
+    [SerializeField] private GameObject stepRayLower;
+    [SerializeField] private float stepHeight = 0.3f;
+    [SerializeField] private float stepSmooth = 0.1f;
 
     //-----------------------------------------------
     private void Awake()
     {
-        //initially set reference variables;
+        // Parameter Hashing
+        isWalkingHash = Animator.StringToHash("isWalking");
+        isRunningHash = Animator.StringToHash("isRunning");
+
+        // initially set reference variables;
         inputControl = new InputControl();
-        characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+
+        characterController = GetComponent<CharacterController>();// may not need this??
 
         // callback function for movement input;
         inputControl.CharacterControls.Move.started += onMovementInput;
         inputControl.CharacterControls.Move.canceled += onMovementInput;
 
         // callback function for Run input;
-        inputControl.CharacterControls.Move.started += onRun;
-        inputControl.CharacterControls.Move.canceled += onRun;
+        inputControl.CharacterControls.Run.started += onRun;
+        inputControl.CharacterControls.Run.canceled += onRun;
 
         // step climb setup / set y position of raycast to stepHeight;
         stepRayUpper.transform.localPosition = new Vector3(stepRayUpper.transform.position.x, stepHeight, stepRayUpper.transform.position.z);
@@ -66,54 +83,81 @@ public class AnimationMoveController : MonoBehaviour
     //-----------------------------------------------
     private void FixedUpdate()
     {
+        //--------------
+        // Call Handlers
         handleRotation();
-
-        input = new Vector3(0, 0, currentMovement * (walkSpeed * Time.fixedDeltaTime));
-
-        rb.MovePosition(rb.position + input);
-
         handleSteps();
+        //--------------
+
+        if (isRunPressed)
+        {
+            input = new Vector3(0, 0, currentRunMovement * Time.fixedDeltaTime);
+        } 
+        else
+        {
+            input = new Vector3(0, 0, currentMovement * Time.fixedDeltaTime);
+        }
+
+        
+        // apply movement input to RigidBody
+        rb.MovePosition(rb.position + input);
     }
 
 
     //-----------------------------------------------
     //-------------------Handlers--------------------
     //-----------------------------------------------
-    void onMovementInput(InputAction.CallbackContext context)
+    private void onMovementInput(InputAction.CallbackContext context)
     {
         // assign movement input to variable / Walk;
         currentMovementInput = context.ReadValue<float>();
-        currentMovement = currentMovementInput;
+        currentMovement = currentMovementInput * walkSpeed;
+        currentRunMovement = currentMovementInput * runSpeed;
 
         // check if movement has been pressed;
         isMovementPressed = currentMovement != 0;
+
     }
 
     //-----------------------------------------------
-    void onRun(InputAction.CallbackContext context)
+    private void onRun(InputAction.CallbackContext context)
     {
         isRunPressed = context.ReadValueAsButton();
     }
 
     //-----------------------------------------------
-    void handleAnimation()
+    private void handleAnimation()
     {
         // get parameter values from animator
-        bool isWalking = animator.GetBool("isWalking");
-        bool isRunning = animator.GetBool("isRunning");
+        bool isWalking = animator.GetBool(isWalkingHash);
+        bool isRunning = animator.GetBool(isRunningHash);
 
+        //----------------------------------------------
+        // Walking Conditionals
         if (isMovementPressed && !isWalking)
         {
-            animator.SetBool("isWalking", true);
+            animator.SetBool(isWalkingHash, true);
         }
         else if(!isMovementPressed && isWalking)
         {
-            animator.SetBool("isWalking", false);
+            animator.SetBool(isWalkingHash, false);
+        }
+
+
+        //----------------------------------------------
+        // Running Conditionals
+        if ((isMovementPressed && isRunPressed) && !isRunning)
+        {
+            animator.SetBool(isRunningHash, true);
+        }
+        else if ((!isMovementPressed || !isRunPressed) && isRunning)
+        {
+            animator.SetBool(isRunningHash, false);
         }
     }
 
     //-----------------------------------------------
-    void handleRotation()
+    private void handleRotation()
     {
         positionToLookAt = new Vector3(0, 0, currentMovement);
 
@@ -126,11 +170,14 @@ public class AnimationMoveController : MonoBehaviour
             rb.MoveRotation(Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame * Time.deltaTime));
         }
 
+
+        // Debug Check Current Rotation
+        currentQ = rb.rotation;
     }
 
     //-----------------------------------------------
     // from tutorial https://www.youtube.com/watch?v=DrFk5Q_IwG0
-    void handleSteps()
+    private void handleSteps()
     {
         // check step using raycast
         RaycastHit hitLower;
