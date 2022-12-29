@@ -16,10 +16,10 @@ public class AnimationMoveController : MonoBehaviour
 
     // player movement input variables;
     [Header("Movement")]
-    private Vector3 input;
-    private float currentMovementInput;
     private float currentMovement;
     private float currentRunMovement;
+    private Vector3 input;
+    [SerializeField] private float currentMovementInput;
     [SerializeField] private float walkSpeed = 1.4f;
     [SerializeField] private float runSpeed = 3.4f;
 
@@ -37,6 +37,7 @@ public class AnimationMoveController : MonoBehaviour
     // Parameter Hashing - Performance Optimization
     int isWalkingHash;
     int isRunningHash;
+    int velocityHash;
 
     // set climb variables;
     [Header("Player Step Climb")]
@@ -45,19 +46,26 @@ public class AnimationMoveController : MonoBehaviour
     [SerializeField] private float stepHeight = 0.3f;
     [SerializeField] private float stepSmooth = 0.1f;
 
+    // set climb variables;
+    //[Header("Debugging")]
+
+
+
+
     //-----------------------------------------------
     private void Awake()
     {
         // Parameter Hashing
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
+        velocityHash = Animator.StringToHash("velocity");
 
         // initially set reference variables;
         inputControl = new InputControl();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 
-        characterController = GetComponent<CharacterController>();// may not need this??
+        characterController = GetComponent<CharacterController>(); // may not need this??
 
         // callback function for movement input;
         inputControl.CharacterControls.Move.started += onMovementInput;
@@ -116,7 +124,6 @@ public class AnimationMoveController : MonoBehaviour
 
         // check if movement has been pressed;
         isMovementPressed = currentMovement != 0;
-
     }
 
     //-----------------------------------------------
