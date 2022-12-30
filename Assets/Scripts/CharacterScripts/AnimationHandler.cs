@@ -11,7 +11,10 @@ public class AnimationHandler : MonoBehaviour
     // Parameter Hashing - Performance Optimization
     private int velocityXHash;
     private int velocityYHash;
-    private int jumpHash;
+
+    private int isGroundedHash;
+    private int isJumpingHash;
+    private int isFallingHash;
 
     //-----------------------------------------------
     private void Awake()
@@ -22,15 +25,21 @@ public class AnimationHandler : MonoBehaviour
         // Get Animator Component
         animator = GetComponent<Animator>();
 
-        // Parameter Hashing
+        // Parameter Hashing movement
         velocityXHash = Animator.StringToHash("velocityX");
         velocityYHash = Animator.StringToHash("velocityY");
-        jumpHash = Animator.StringToHash("jump");
+
+        // Parameter Hashing Action
+        isGroundedHash = Animator.StringToHash("isGrounded");
+        isJumpingHash = Animator.StringToHash("isJumping");
+        isFallingHash = Animator.StringToHash("isFalling");
     }
 
     //-----------------------------------------------
     private void FixedUpdate()
     {
+        animator.SetBool(isGroundedHash, characterController.isGrounded);
+ 
         handleMovementAnimation();
         handleJumpAnimation();
     }
@@ -42,14 +51,20 @@ public class AnimationHandler : MonoBehaviour
         if (characterController.isGrounded)
         {
             // apply movement velocity to blend tree 
-            animator.SetFloat(velocityXHash, Mathf.Abs(characterController.velocityX));  
+            animator.SetFloat(velocityXHash, Mathf.Abs(characterController.velocityX));
         }
+
     }
 
     //-----------------------------------------------
     private void handleJumpAnimation()
     {
-        animator.SetFloat(velocityYHash, Mathf.Abs(characterController.velocityY));
+        // Set jumping animation
+        animator.SetBool(isJumpingHash, characterController.isJumping);
+
+        //set falling animation
+        animator.SetBool(isFallingHash, characterController.isFalling);
+
     }
 
 

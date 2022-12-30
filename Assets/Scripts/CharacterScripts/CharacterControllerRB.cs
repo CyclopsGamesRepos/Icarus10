@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEditor.ShaderGraph.Internal;
+using static UnityEngine.ProBuilder.AutoUnwrapSettings;
+using UnityEngine.Networking.Types;
 
 public class CharacterControllerRB : MonoBehaviour
 {
-    // declare references;
-    private InputControl inputControl;
+    //-- Declare References --//
+    private ControllerInputManager input;
     private Rigidbody rb;
     private GroundCheck groundCheck;
 
     [Header("Public Variables")] // accesed by animation handler
     public float velocityX = 0f; 
     public float velocityY = 0f; 
-    public Vector3 normalizedVelocity;
     public bool isGrounded;
-
-
-    //public bool isJumping;
+    public bool isJumping;
+    public bool isFalling;
 
     [Header("Walk")] // walk
     [SerializeField] private float walkSpeed = 2f;
@@ -33,7 +33,7 @@ public class CharacterControllerRB : MonoBehaviour
     [Header("Jump")] // Jump
     [SerializeField] private float jumpForce = 6f;
 
-    [Header("Movement Control")] // tweaks
+    [Header("Movement Control")] // motion tweaks
     [SerializeField] private float idleThreshold = 0.05f;
     [SerializeField] private float switchSpeed = 0.5f;
 
@@ -50,18 +50,11 @@ public class CharacterControllerRB : MonoBehaviour
     [SerializeField] private float stepSmooth = 0.1f;
 
     //------------------------------------------------
-
     // movement
-    private float currentMovement;
-    private bool isMovementPressed;
-    private bool isRunPressed;
-    private bool isJumpPressed;
-    private bool isJumping;
-    private bool isFalling;
-
     private float maxVelocity = 0f;
     private float acceleration = 0f;
     private float decceleration = 0f;
+    private Vector3 normalizedVelocity;
 
     // direction
     private bool isRight;
@@ -70,74 +63,114 @@ public class CharacterControllerRB : MonoBehaviour
     //-----------------------------------------------
     public void Awake()
     {
+        //-----------------------------------
         // initially set reference variables;
-        inputControl = new InputControl();
         rb = GetComponent<Rigidbody>();
         groundCheck = GetComponent<GroundCheck>();
-     
-        //------------------------------------------------------------
-        // callback function for movement input;
-        inputControl.CharacterControls.Move.started += onMovementInput;
-        inputControl.CharacterControls.Move.canceled += onMovementInput;
+        input = GetComponent<ControllerInputManager>();
 
-        // callback function for Run input;
-        inputControl.CharacterControls.Run.started += onRunInput;
-        inputControl.CharacterControls.Run.canceled += onRunInput;
-
-        // callback function for Jump input;
-        inputControl.CharacterControls.Jump.started += onJumpInput;
-        inputControl.CharacterControls.Jump.canceled += onJumpInput;
-        //------------------------------------------------------------
-
-        // step climb setup / set y position of raycast to stepHeight;
+        //-------------------------------------------------------------------------------
+        // step climb setup / set y position of raycast to stepHeight transform position;
         stepRayUpper.transform.localPosition = new Vector3(stepRayUpper.transform.position.x, stepHeight, stepRayUpper.transform.position.z);
     }
 
     //-----------------------------------------------
     private void FixedUpdate()
     {
-        isGrounded = groundCheck.IsGrounded(); // check if player is touching the ground
+   
+        //-----------------------------------
+        // check if player is grounded
+        isGrounded = groundCheck.isGrounded();
 
-        if (isGrounded && isJumpPressed)
+        //-----------------------------------
+        // jump
+        handleJump();
+
+        //-----------------------------------------------
+        // if player is grounded normal motion is applied
+        if (isGrounded)       
         {
-            rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
-        }
-
-      
-
-        if (isGrounded)
-        {
-            //--------------
-            // Call Handlers
+            handleDirection();
             handleVelocity();
             handleRotation();
             handleSteps();
         }
 
 
+
+        //------------------------------------
+        // Final Velocity applied to RigidBody
+        //------------------------------------
         velocityY = rb.velocity.y;
 
-        //----- Final Velocity applied to RigidBody -----------
-        rb.velocity = new Vector3 (0, rb.velocity.y, velocityX);
-        //-----------------------------------------------------
-        normalizedVelocity = rb.velocity.normalized;
-        //-----------------------------------------------------
+        rb.velocity = new Vector3 (0, velocityY, velocityX);
+
+
+        //-----------------------------------------
+        normalizedVelocity = rb.velocity.normalized;    
+
     }
+
 
     //-----------------------------------------------
     //-------------------Handlers--------------------
     //-----------------------------------------------
+    private void handleJump()
+    {
+        if (isGrounded)
+        {
+            isJumping = false;
+            isFalling = false;
+      
+        }
+
+        if (isGrounded && input.isJumpPressed)
+        {
+            rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
+        }
+
+        // going up
+        if (!isGrounded && normalizedVelocity.y > 0)
+        {
+            isJumping = true;
+            isFalling = false;
+        }
+
+        // going down
+        if (!isGrounded && normalizedVelocity.y < 0)
+        {
+            isFalling = true;
+            isJumping = false;
+        }
+    }
+
+    //-----------------------------------------------
+    private void handleDirection()
+    {
+        if (input.currentMovement == 1)
+        {
+            isRight = true;
+            isLeft = false;
+        }
+        else if (input.currentMovement == -1)
+        {
+            isLeft = true;
+            isRight = false;
+        }
+    }
+
+    //-----------------------------------------------
     private void handleVelocity()
     {
         // apply changes to acceleration and decceleration
-        if (!isRunPressed)
+        if (!input.isRunPressed)
         {
             maxVelocity = walkSpeed;
             acceleration = walkAcceleration;
             decceleration = walkDecceleration;
         }
 
-        if (isRunPressed)
+        if (input.isRunPressed)
         {
             maxVelocity = runSpeed;
             acceleration = runAcceleration;
@@ -146,20 +179,20 @@ public class CharacterControllerRB : MonoBehaviour
 
         //----------------------------------------------------
         //----------------------------------------------------
-        // walk right
-        if (isRight && isMovementPressed && velocityX < maxVelocity)
+        // walk | right
+        if (isRight && input.isMovementPressed && velocityX < maxVelocity)
         {
             velocityX += Time.fixedDeltaTime * acceleration;
         }
 
-        // slow from walk right
-        if (!isMovementPressed && velocityX > 0)
+        // slow from walk | right
+        if (!input.isMovementPressed && velocityX > 0)
         {
             velocityX -= Time.fixedDeltaTime * decceleration;
         }
 
-        // slow from run right
-        if (isRight && isMovementPressed && velocityX > maxVelocity)
+        // slow from run | right
+        if (isRight && input.isMovementPressed && velocityX > maxVelocity)
         {
             velocityX -= Time.fixedDeltaTime * runDecceleration;
         }
@@ -171,27 +204,27 @@ public class CharacterControllerRB : MonoBehaviour
         }
 
         // reset velocity when still
-        if (isRight && !isMovementPressed && !isRunPressed && velocityX < idleThreshold)
+        if (isRight && !input.isMovementPressed && !input.isRunPressed && velocityX < idleThreshold)
         {
             velocityX = 0;
         }
 
         //----------------------------------------------------
         //----------------------------------------------------
-        //walk left
-        if (isLeft && isMovementPressed && velocityX > -maxVelocity)
+        //walk | left
+        if (isLeft && input.isMovementPressed && velocityX > -maxVelocity)
         {
             velocityX -= Time.fixedDeltaTime * acceleration;
         }
 
-        //slow from walk left
-        if (!isMovementPressed && velocityX < 0)
+        //slow from walk | left
+        if (!input.isMovementPressed && velocityX < 0)
         {
             velocityX += Time.fixedDeltaTime * decceleration;
         }
 
-        // slow from run left
-        if (isLeft && isMovementPressed && velocityX < -maxVelocity)
+        // slow from run | left
+        if (isLeft && input.isMovementPressed && velocityX < -maxVelocity)
         {
             velocityX += Time.fixedDeltaTime * runDecceleration;
         }
@@ -203,57 +236,22 @@ public class CharacterControllerRB : MonoBehaviour
         }
 
         // reset velocity when still
-        if (isLeft && !isMovementPressed && !isRunPressed && velocityX > -idleThreshold)
+        if (isLeft && !input.isMovementPressed && !input.isRunPressed && velocityX > -idleThreshold)
         {
             velocityX = 0;
         }
 
     }
 
-
-    //-----------------------------------------------
-    private void onMovementInput(InputAction.CallbackContext context)
-    {
-        // assign movement input to variable / Walk;
-        currentMovement = context.ReadValue<float>();
-
-        // isMovementPressed is true if current movement does not equal 0
-        isMovementPressed = currentMovement != 0;
-
-        // Check Direction
-        if (currentMovement == 1)
-        {
-            isRight = true;
-            isLeft = false;
-        }
-        else if (currentMovement == -1)
-        {
-            isRight = false;
-            isLeft = true;
-        }
-    }
-
-    //-----------------------------------------------
-    private void onRunInput(InputAction.CallbackContext context)
-    {
-        isRunPressed = context.ReadValueAsButton();
-    }
-
-    //-----------------------------------------------
-    private void onJumpInput(InputAction.CallbackContext context)
-    {
-        isJumpPressed = context.ReadValueAsButton();
-    }
-
     //-----------------------------------------------
     private void handleRotation()
     {
-        positionToLookAt = new Vector3(0, 0, currentMovement);
+        positionToLookAt = new Vector3(0, 0, input.currentMovement);
 
         Quaternion currentRotation;
         currentRotation = transform.rotation;
 
-        if (isMovementPressed)
+        if (input.isMovementPressed)
         {
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
             rb.MoveRotation(Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame * Time.deltaTime));
@@ -302,15 +300,6 @@ public class CharacterControllerRB : MonoBehaviour
         }
     }
 
-    //-----------------------------------------------
-    private void OnEnable()
-    {
-        inputControl.CharacterControls.Enable();    
-    }
 
-    //-----------------------------------------------
-    private void OnDisable()
-    {
-        inputControl.CharacterControls.Disable();
-    }
-}
+
+}//--------------------

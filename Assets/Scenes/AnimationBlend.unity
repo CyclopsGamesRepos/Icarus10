@@ -236,7 +236,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 6.428, y: -92.754, z: -48.658}
 --- !u!1001 &408705636
 PrefabInstance:
@@ -248,7 +248,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 43b2917135ecdd241873dea4658a084d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43b2917135ecdd241873dea4658a084d,
         type: 3}
@@ -320,6 +320,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 6f27bd797fe58ec4692781edc3824723, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 43b2917135ecdd241873dea4658a084d,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43b2917135ecdd241873dea4658a084d, type: 3}
 --- !u!1001 &452561193
@@ -829,7 +834,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1550
+  m_Name: pb_Mesh-2172
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1061,17 +1066,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocityX: 0
   velocityY: 0
-  normalizedVelocity: {x: 0, y: 0, z: 0}
   isGrounded: 1
+  isJumping: 0
+  isFalling: 0
   walkSpeed: 2
   walkAcceleration: 5
   walkDecceleration: 5
-  runSpeed: 4
-  runAcceleration: 2
+  runSpeed: 4.5
+  runAcceleration: 4
   runDecceleration: 2
-  jumpForce: 2
+  jumpForce: 1.8
   idleThreshold: 0.08
-  switchSpeed: 0.6
+  switchSpeed: 0.4
   rotationFactorPerFrame: 10
   stepRayUpper: {fileID: 2053594998}
   upperRaycastDistance: 0.76
@@ -1108,6 +1114,7 @@ MonoBehaviour:
   platform:
     serializedVersion: 2
     m_Bits: 256
+  threshold: 0.2
 --- !u!114 &1316188829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1120,6 +1127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff4475fcfb8eb54dbaf2360f027eafc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentMovement: 0
+  isMovementPressed: 0
+  isRunPressed: 0
+  isJumpPressed: 0
 --- !u!1 &1377168157
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,7 +1268,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1538
+  m_Name: pb_Mesh-2160
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
