@@ -8,18 +8,21 @@ public class ControllerInputManager : MonoBehaviour
 {
     // declare references;
     private InputControl inputControl;
+    private CharacterControllerRB characterController;
 
     // movement
     public float currentMovement;
     public bool isMovementPressed;
     public bool isRunPressed;
     public bool isJumpPressed;
+    public bool isCrouchPressed;
 
     //-----------------------------------------------
     public void Awake()
     {
         // initially set reference variables;
         inputControl = new InputControl();
+        characterController = GetComponent<CharacterControllerRB>();
 
         //------------------------------------------------------------
         // callback function for: movement input;
@@ -34,6 +37,14 @@ public class ControllerInputManager : MonoBehaviour
         inputControl.CharacterControls.Jump.started += onJumpInput;
         inputControl.CharacterControls.Jump.performed += onJumpInput;
         inputControl.CharacterControls.Jump.canceled += onJumpInput;
+
+        // callback function for: Crouch input;
+        inputControl.CharacterControls.Crouch.started += onCrouchInput;
+        inputControl.CharacterControls.Crouch.canceled += onCrouchInput;
+
+        // callback function for: Sitting input;
+        inputControl.CharacterControls.Interact.started += onInteractInput;
+        inputControl.CharacterControls.Interact.canceled += onInteractInput;
         //------------------------------------------------------------
 
     }
@@ -52,14 +63,38 @@ public class ControllerInputManager : MonoBehaviour
 
     }   // returns a -1 or +1 value from keyboard ('a' or 'd')
 
+
     //-----------------------------------------------
     private void onRunInput(InputAction.CallbackContext context)
     {   
 
         isRunPressed = context.ReadValueAsButton();
 
-
     }   // returns when 'shift' is pressed
+
+
+    //-----------------------------------------------
+    private void onCrouchInput(InputAction.CallbackContext context)
+    {
+        // increment toggle variable on release
+        if (context.canceled)
+        {
+            characterController.crouchToggle += 1;
+        }
+
+    }   // returns when 'c' is pressed (Toggle Action)
+
+
+    //-----------------------------------------------
+    private void onInteractInput(InputAction.CallbackContext context)
+    {
+        // increment toggle variable on release
+        if (context.canceled)
+        {
+            characterController.interactToggle += 1;
+        }
+
+    }   // returns when 'e' is pressed (Toggle Action)
 
     //-----------------------------------------------
     private void onJumpInput(InputAction.CallbackContext context)
@@ -75,9 +110,15 @@ public class ControllerInputManager : MonoBehaviour
         if (context.canceled) { isJumpPressed = false; }
 
 
-    }   // returns when 'space bar pressed'. Prevents Retriggering
+    }   // returns when 'space bar pressed'. (Hold Action)
+
+
+
 
     //-----------------------------------------------
+    //------------Enable / Disable Input-------------
+    //-----------------------------------------------
+
     private void OnEnable()
     {
         inputControl.CharacterControls.Enable();
