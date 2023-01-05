@@ -31,7 +31,7 @@ public class WireGame : MonoBehaviour
         gameDone = true;
 
         // setting up a delay so the wires have time to be initialized
-        Invoke("SetUpWires", 0.1f);
+        Invoke("SetUpWires", 0.01f);
 
     } // end OnEnable
 
@@ -44,8 +44,7 @@ public class WireGame : MonoBehaviour
         if ( (wiresToConnect <= 0) && !gameDone)
         {
             // Debug code - TODO: Comment out before release
-            GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-            Debug.Log("Wire Puzzle solved. " + gameManager.NumProblemsFixed + " puzzles solved.");
+            Debug.Log("Wire Puzzle solved.");
 
             // set up the done button amd mark this game as done as well
             doneButton.SetActive(true);

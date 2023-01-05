@@ -52,6 +52,10 @@ public class CodeBreakerGame : MonoBehaviour
         UpdateTensValue();
         UpdateOnesValue();
 
+        // reset the game buttons and initial text
+        messageText.text = "Use Check Code button when ready";
+        checkCodeButton.SetActive(true);
+        doneButton.SetActive(false);
         problemSolved = false;
 
     } // end OnEnable
@@ -84,6 +88,8 @@ public class CodeBreakerGame : MonoBehaviour
             checkCodeButton.SetActive(false);
             doneButton.SetActive(true);
             problemSolved = true;
+
+            Debug.Log("Code Puzzle solved.");
         }
         // otherwise let them no to continue trying
         else

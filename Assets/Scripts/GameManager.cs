@@ -8,13 +8,13 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    // may not need this
-    public enum Puzzles
+    // TODO: perhaps create a puzzle script to deal with puzzles and clean this code up
+    public enum ProblemTypes
     {
-        FIX_ROBOT,
+        FIX_WIRES,
         CODE_BREAKER,
         FIRE,
-
+        ASTEROIDS,
     }
 
     // Constant values
@@ -24,10 +24,10 @@ public class GameManager : MonoBehaviour
     public const int NUM_PROBLEMS_TO_WIN = 5;                           // the number of puzzles that must be solved to beat the clock
     public const string WIN_TEXT = "You did it!\n Time to go home.";    // the text if the player solves all the problems
 
-    // Public variables
-    public bool gameRunning = false;                                    // lets the game know we should count down the timer
-
     // Serialized variables
+    [Header("Player Data")]
+    [SerializeField] CharacterControllerRB characterControllerRB;       // set up the player character controller to update animations...maybe
+
     [Header("UI Elements to Update")]
     [SerializeField] GameObject uiMenu;                                 // a link to the ui menu so we can turn it on/off
     [SerializeField] GameObject endMenu;                                // a link to the end menu so we can turn it on
@@ -38,14 +38,27 @@ public class GameManager : MonoBehaviour
 
     // An array to track the problems
     // TODO: make this cleaner by using an enum and array to store the games - not all are UI based so may be tricky
-    [Header("Problem Elements")]
+    [Header("Problem Games")]
     [SerializeField] GameObject[] problems;                             // a link to the problems as Game Objects
 
+    // puzzle locations on the ship based on puzzle type
+    [Header("Problem Objects")]
+    [SerializeField] Material problemMaterial;                          // the material to set up when there is a problem
+    [SerializeField] GameObject[] wireProblemAreas;                     // objects that can have the wire problem spring up
+    [SerializeField] GameObject[] codeProblemAreas;                     // objects that can have the code problem spring up
+
+    // Public variables
+    public bool gameRunning = false;                                    // lets the game know we should count down the timer
+    public int currentPuzzleType;                                       // needed to put the material back to normal
+    public int currentProblemLocation;                                  
+
     // Private variables
+    private GameObject[][] problemAreas;                                // the list of possilble places for each problem
+    private Material originalMaterial;                                  // the original material of the problem area
     private float gameTimer;                                            // to keep track of the game time for end game
     private float problemTimer;                                         // keeps track of time to next problem
-    private int numProblemsFixed = 0;                                   // keeps track of how many problems have been fixed to check on end game
     private bool problemStarted = false;                                // to keep track of when problems occur and to reset timer
+    private int numProblemsFixed = 0;                                   // keeps track of how many problems have been fixed to check on end game
 
     public int NumProblemsFixed { get => numProblemsFixed; }
 
@@ -54,7 +67,12 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Start()
     {
-        
+        // set up the overall problem area spaces (some may be only a single area)
+        problemAreas = new GameObject[problems.Length][];
+
+        problemAreas[0] = wireProblemAreas;
+        problemAreas[1] = codeProblemAreas;
+
     } // end Start
 
     /// <summary>
@@ -144,7 +162,20 @@ public class GameManager : MonoBehaviour
         problemTimer = TIME_TO_PROBLEM;
         problemStarted = false;
 
+        // put the original material back on the object
+        problemAreas[currentPuzzleType][currentProblemLocation].GetComponent<MeshRenderer>().material = originalMaterial;
+
+        Debug.Log("Wire Puzzle solved." + (NumProblemsFixed + 1) + " puzzles solved.");
+
     } // end MarkProblemSolved
+
+    /// <summary>
+    /// Used by other scripts to turn off the UI menu when going into a menu based mini game
+    /// </summary>
+    public void TurnOffUIMenu()
+    {
+        uiMenu.SetActive(false);
+    }
 
     /// <summary>
     /// Updates the game time and text in the UI
@@ -170,12 +201,20 @@ public class GameManager : MonoBehaviour
         {
             problemStarted = true;
 
-            // turn off the in game UI
-            uiMenu.SetActive(false);
+            // randomize the next puzzle typ - right now only starts wire puzzle
+            currentPuzzleType = Random.Range(0, problems.Length);
 
-            // randomize the next puzzle - right now only starts wire puzzle
-            int randomPuzzleIndex = Random.Range(0, problems.Length);
-            problems[randomPuzzleIndex].SetActive(true);
+            // now randomize the next puzzle location
+            currentProblemLocation = Random.Range(0, problemAreas[currentPuzzleType].Length);
+
+            // set the object there to the problem material to signify that it needs help (store the original material for later)
+            originalMaterial = problemAreas[currentPuzzleType][currentProblemLocation].GetComponent<MeshRenderer>().material;
+            problemAreas[currentPuzzleType][currentProblemLocation].GetComponent<MeshRenderer>().material = problemMaterial;
+
+            // TODO: Don't call up the puzzle here - set up a material on the area where puzzles of a type can be and set it as active
+            problemAreas[currentPuzzleType][currentProblemLocation].GetComponent<PuzzleArea>().hasProblem = true;
+
+            //problems[randomPuzzleIndex].SetActive(true);
         }
 
     } // end UpdateProblemTimer
