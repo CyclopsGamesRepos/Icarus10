@@ -4,21 +4,24 @@ using UnityEngine;
 
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     // Constant values
     public const string TIMER_TEXT = "Time until Impact: ";     // the default text for the timer when updated
-    // TODO: Increase to 600 seconds later when testing the game more (10 minutes)
-    public const int TIME_TO_SUN = 5;                         // seconds before the ship crashes into the sun
+    public const int TIME_TO_SUN = 600;                         // seconds before the ship crashes into the sun - 600 is 10 minutes
 
     // Public variables
     public bool gameRunning = false;                            // lets the game know we should count down the timer
+    public int numProblemsFixed = 0;
 
     // Serialized variables
     [Header("UI Elements to Update")]
     [SerializeField] GameObject uiMenu;                         // a link to the ui menu so we can turn it on/off
     [SerializeField] GameObject endMenu;                        // a link to the end menu so we can turn it on
+    [SerializeField] Image winImage;                            // if the player wins update the endMenu BG to this image
+    [SerializeField] TextMeshProUGUI endGameText;               // the text object to update message to the player at end of the game
     [SerializeField] TextMeshProUGUI timerText;                 // the timer text object to update
 
     // Private variables
