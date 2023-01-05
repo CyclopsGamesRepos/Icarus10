@@ -25,21 +25,21 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
     ""maps"": [
         {
             ""name"": ""CharacterControls"",
-            ""id"": ""455d9603-0c3e-4e12-972c-c6bd596c3f23"",
+            ""id"": ""c755f962-c336-4f05-abe5-db1b1da66393"",
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""type"": ""Value"",
-                    ""id"": ""86521c0e-020c-4c14-adf5-bcd2c40ffb6b"",
-                    ""expectedControlType"": """",
+                    ""type"": ""Button"",
+                    ""id"": ""b102ace4-c5dd-44b1-965f-6f43c2dfdb5d"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""Run"",
                     ""type"": ""Button"",
-                    ""id"": ""35922811-5dd7-47d5-88de-a3a053243819"",
+                    ""id"": ""ba844165-1086-4619-950a-c0b609b07c47"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -48,7 +48,7 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
-                    ""id"": ""1ec2d3da-1922-47b3-bd46-48a8f4f705c6"",
+                    ""id"": ""21909518-6852-4533-a572-115e4ccf8928"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -57,7 +57,7 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Crouch"",
                     ""type"": ""Button"",
-                    ""id"": ""07680425-94d6-4ef4-aba1-70f9a717fdec"",
+                    ""id"": ""5e81dc01-61e7-4b0a-97c5-574661c52778"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -66,7 +66,25 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
-                    ""id"": ""df07f28f-f3c3-4b4c-bb4e-6b5532d0de3a"",
+                    ""id"": ""2ea9286f-7d64-4388-b1a5-42716148bd52"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Button"",
+                    ""id"": ""d3cd4bdc-c52f-4557-a652-a7b630ad53dd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""7b1aff1a-0a81-43e5-9c80-428f25a79986"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -76,7 +94,7 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": ""1D Axis"",
-                    ""id"": ""a1b3ba06-dc89-422d-b3da-7ddb8911eeaf"",
+                    ""id"": ""af506e4e-7ecd-49a6-a717-f2cd616e9341"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -87,7 +105,7 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""negative"",
-                    ""id"": ""2e645da3-3f01-49d7-9124-4e664a57ea4f"",
+                    ""id"": ""c5a47473-1381-4446-aece-6b074a9a55a7"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -98,7 +116,7 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""positive"",
-                    ""id"": ""2c630c02-6bfc-4710-a12b-6ccc637138f2"",
+                    ""id"": ""f63ca8de-d89e-462e-9e46-57ef77c453c7"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -109,8 +127,8 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e225053a-17dd-407f-8000-c1e00e9c8b51"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""id"": ""d14f2872-25f9-4084-8f1c-871dc516e994"",
+                    ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -120,9 +138,9 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a1d833b5-5ae0-4135-ac30-365a49474e33"",
+                    ""id"": ""eca65f31-bced-4286-9bee-ed609593c20a"",
                     ""path"": ""<Keyboard>/space"",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": ""Hold(duration=0.6)"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Jump"",
@@ -131,7 +149,7 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""214f500f-1877-45f1-9500-cbf2b8f5dc09"",
+                    ""id"": ""7e821323-a3db-4c78-bef6-87a88b2e4974"",
                     ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -142,12 +160,56 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d2fcd2c4-eb64-4a63-8460-e2b7e6e0785c"",
+                    ""id"": ""02f01889-07e7-4f6b-bd81-1c41ee01077e"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""c8c02dc9-4a0a-4a8d-a176-ecde99746a42"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""c080fd48-6efa-4189-a82c-c53a67d6158d"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""8f2b5794-009c-4af0-b524-826f167850b9"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3bc4f55-1005-4108-970c-c86837002b04"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -163,6 +225,8 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
         m_CharacterControls_Jump = m_CharacterControls.FindAction("Jump", throwIfNotFound: true);
         m_CharacterControls_Crouch = m_CharacterControls.FindAction("Crouch", throwIfNotFound: true);
         m_CharacterControls_Interact = m_CharacterControls.FindAction("Interact", throwIfNotFound: true);
+        m_CharacterControls_Aim = m_CharacterControls.FindAction("Aim", throwIfNotFound: true);
+        m_CharacterControls_Shoot = m_CharacterControls.FindAction("Shoot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -227,6 +291,8 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
     private readonly InputAction m_CharacterControls_Jump;
     private readonly InputAction m_CharacterControls_Crouch;
     private readonly InputAction m_CharacterControls_Interact;
+    private readonly InputAction m_CharacterControls_Aim;
+    private readonly InputAction m_CharacterControls_Shoot;
     public struct CharacterControlsActions
     {
         private @InputControl m_Wrapper;
@@ -236,6 +302,8 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_CharacterControls_Jump;
         public InputAction @Crouch => m_Wrapper.m_CharacterControls_Crouch;
         public InputAction @Interact => m_Wrapper.m_CharacterControls_Interact;
+        public InputAction @Aim => m_Wrapper.m_CharacterControls_Aim;
+        public InputAction @Shoot => m_Wrapper.m_CharacterControls_Shoot;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -260,6 +328,12 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnInteract;
+                @Aim.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnAim;
+                @Aim.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnAim;
+                @Aim.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnAim;
+                @Shoot.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnShoot;
+                @Shoot.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnShoot;
+                @Shoot.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnShoot;
             }
             m_Wrapper.m_CharacterControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -279,6 +353,12 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @Aim.started += instance.OnAim;
+                @Aim.performed += instance.OnAim;
+                @Aim.canceled += instance.OnAim;
+                @Shoot.started += instance.OnShoot;
+                @Shoot.performed += instance.OnShoot;
+                @Shoot.canceled += instance.OnShoot;
             }
         }
     }
@@ -290,5 +370,7 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
     }
 }

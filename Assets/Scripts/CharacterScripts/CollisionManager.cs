@@ -5,24 +5,92 @@ using UnityEngine;
 
 public class CollisionManager : MonoBehaviour
 {
-    public bool inCockpit;
+    public bool inCockpitZone;
+    public bool inCablePuzzleZone;
+    public bool inTerminalPuzzleZone;
+    public bool inFireZone;
 
+    public bool interactionAllowed;
+
+    //--------------------------------------
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("Entered: " + other.gameObject.tag);
 
-        if (other.gameObject.tag == "Cockpit")
+        //--------------------------------------
+        if (other.gameObject.tag == "PilotZone")
         {
-            inCockpit = true;
+            Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
+
+            interactionAllowed = true;
+            inCockpitZone = true;
+        }
+
+        //--------------------------------------
+        if (other.gameObject.tag == "CablePuzzleZone")
+        {
+            Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
+
+            interactionAllowed = true;
+            inCablePuzzleZone = true;
+        }
+
+        //--------------------------------------
+        if (other.gameObject.tag == "TerminalPuzzleZone")
+        {
+            Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
+
+            interactionAllowed = true;
+            inTerminalPuzzleZone = true;
+        }
+
+
+        //--------------------------------------
+        if (other.gameObject.tag == "FireZone")
+        {
+            Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
+
+            interactionAllowed = true;
+            inFireZone = true;
         }
     }
 
+    //--------------------------------------
     private void OnTriggerExit(Collider other)
     {
-        //Debug.Log("Exited: " + other.gameObject.tag);
-        if (other.gameObject.tag == "Cockpit")
+        //--------------------------------------
+        if (other.gameObject.tag == "PilotZone")
         {
-            inCockpit = false;
+            Debug.Log("Exited: " + other.gameObject.tag);
+
+            interactionAllowed = false;
+            inCockpitZone = false;
+        }
+
+        //--------------------------------------
+        if (other.gameObject.tag == "CablePuzzleZone" )
+        {
+            Debug.Log("Exited: " + other.gameObject.tag);
+
+            interactionAllowed = false;
+            inCablePuzzleZone = false;
+        }
+
+        //--------------------------------------
+        if (other.gameObject.tag == "TerminalPuzzleZone")
+        {
+            Debug.Log("Exited: " + other.gameObject.tag);
+
+            interactionAllowed = false;
+            inTerminalPuzzleZone = false;
+        }
+
+        //--------------------------------------
+        if (other.gameObject.tag == "FireZone")
+        {
+            Debug.Log("Exited: " + other.gameObject.tag);
+
+            interactionAllowed = false;
+            inFireZone = false;
         }
     }
 
