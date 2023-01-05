@@ -9,7 +9,6 @@ public class Wires : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     // serialized variables for ease of access
     [SerializeField] Canvas parentCanvas;   // the main canvas (may need to make this a sub canvas or separate one for mini games)
     [SerializeField] WireGame wireGame;     // a link back to the main wire game so we can set which wires are being touched
-    [SerializeField] bool isStartWire;      // lets the system know if this is a starting wire
 
     // public variables
     public Image wireImage;                 // The image used by this wire
@@ -19,16 +18,21 @@ public class Wires : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     private LineRenderer wireLine;          // the renderer we will use for this line to show the wire being fixed
     private bool beingDragged = false;      // is the wire currently being dragged with the mouse
 
-
     /// <summary>
-    /// Start is called before the first frame update
+    /// OnEnable is called when the object is created and every time it is enabled
     /// </summary>
-    void Awake()
+    private void OnEnable()
     {
+        // set up the variables for this wire
         wireImage = GetComponent<Image>();
         wireLine = GetComponent<LineRenderer>();
 
-    } // end Start
+        // reset the wire
+        wireLine.SetPosition(0, Vector3.zero);
+        wireLine.SetPosition(1, Vector3.zero);
+        isConnected = false;
+
+    } // end OnEnable
 
     /// <summary>
     /// Update is called once per frame
@@ -62,7 +66,7 @@ public class Wires : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
             Input.mousePosition, parentCanvas.worldCamera);
 
         // if so, then set this as the current mouse over wire
-        if ( (mouseOver) && (!isStartWire) )
+        if (mouseOver)
         {
             wireGame.mouseOverWire = this;
         }
@@ -93,7 +97,7 @@ public class Wires : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     public void OnBeginDrag(PointerEventData eventData)
     {
         // only set the line to draw if it is a start wire and it is not already connected
-        if ( (isStartWire) && (!isConnected) )
+        if (!isConnected)
         {
             beingDragged = true;
             //wireGame.selectedWire = this;
@@ -116,7 +120,7 @@ public class Wires : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         }
 
         // clear the selected wire to make sure they don't accidentally get chosen again
-        //wireGame.selectedWire = null;
+        wireGame.mouseOverWire = null;
         beingDragged = false;
 
     } // end OnEndDrag

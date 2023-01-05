@@ -24,9 +24,41 @@ public class WireGame : MonoBehaviour
     private bool gameDone;                      // added to keep it from continually setting the done button to active
 
     /// <summary>
-    /// Awake is called when the object is activated
+    /// OnEnable is called when the object is activated
     /// </summary>
-    void Awake()
+    void OnEnable()
+    {
+        // game done is true here to prevent the update from instant winning - it is set to false when wires set up
+        gameDone = true;
+
+        // setting up a delay so the wires have time to be initialized
+        Invoke("SetUpWires", 0.1f);
+
+    } // end OnEnable
+
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
+    void Update()
+    {
+        // Check to see if it is time to let the player see the done button
+        if ( (wiresToConnect <= 0) && !gameDone)
+        {
+            // Debug code - TODO: Comment out before release
+            GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            Debug.Log("Wire Puzzle solved. " + gameManager.NumProblemsFixed + " puzzles solved.");
+
+            // set up the done button amd mark this game as done as well
+            doneButton.SetActive(true);
+            gameDone = true;
+        }
+        
+    } // end Update
+
+    /// <summary>
+    /// Sets up the wires for the mini game
+    /// </summary>
+    private void SetUpWires()
     {
         // set up the lists for the random wire generation system
         availableColors = new List<Color>(wireColors);
@@ -51,7 +83,7 @@ public class WireGame : MonoBehaviour
         }
 
         // now go through the lists until all available wire indices are filled (probably only need one as we remove them together)
-        while ( (startWireIndices.Count > 0) && (endWireIndices.Count > 0) )
+        while ((startWireIndices.Count > 0) && (endWireIndices.Count > 0))
         {
             // choose a random color from those available
             Color chosenColor = availableColors[Random.Range(0, availableColors.Count)];
@@ -68,24 +100,8 @@ public class WireGame : MonoBehaviour
             availableColors.Remove(chosenColor);
             startWireIndices.RemoveAt(startIndex);
             endWireIndices.RemoveAt(endIndex);
-
         }
 
-    } // end Awake
+    } // end SetUpWires
 
-    /// <summary>
-    /// Update is called once per frame
-    /// </summary>
-    void Update()
-    {
-        // Check to see if it is time to let the player see the done button
-        if ( (wiresToConnect <= 0) && !gameDone)
-        {
-            doneButton.SetActive(true);
-            gameDone = true;
-            GameObject.Find("GameManager").GetComponent<GameManager>().numProblemsFixed++;
-            Debug.Log("Wire Puzzle solved. " + GameObject.Find("GameManager").GetComponent<GameManager>().numProblemsFixed + " puzzles solved.");
-        }
-        
-    } // end Update
 }
