@@ -9,17 +9,21 @@ using UnityEngine.Windows;
 
 public class CharacterControllerRB : MonoBehaviour
 {
+
     //-- Declare References --//
     private ControllerInputManager input;
     private Rigidbody rb;
     private GroundCheck groundCheck;
     private BoxCollider boxCollider;
     private CollisionManager collisionManager;
+    private AnimationHandler animationHandler;
     //-------------------------
-    
+
 
     //-------------------------
     [Header("Public Variables")] // accesed by animation handler
+    [SerializeField] float rotation;
+
     public float velocityX = 0f; 
     public float velocityY = 0f;
 
@@ -28,8 +32,22 @@ public class CharacterControllerRB : MonoBehaviour
     public bool isFalling;
     public bool isCrouched;
     public int crouchToggle;
+ 
+
+    public bool isStanding;
+
     public int interactToggle;
-    public bool isSitting;
+
+    public bool actionAllowed;
+    public bool movementAllowed;
+
+    //------------------------
+    public bool isInteracting;
+
+    public bool isPiloting;
+    public bool isSolvingCablePuzzle;
+    public bool isSolvingTerminalPuzzle;
+    public bool isAiming;
     //-----------------------
 
 
@@ -65,12 +83,15 @@ public class CharacterControllerRB : MonoBehaviour
     [SerializeField] private float upperRaycastDistance = 0.2f;
     [SerializeField] private GameObject stepRayLower;
     [SerializeField] private float lowerRaycastDistance = 0.1f;
-    [SerializeField] private float stepHeight = 0.3f;
+    //[SerializeField] private float stepHeight = 0.3f;
     [SerializeField] private float stepSmooth = 0.1f;
+    [SerializeField] LayerMask platform;
+
 
     [Header("Collider")] // Collider Variables;
     [SerializeField] private Vector3 boxColliderSize = new Vector3(0, 0.89f, 0);
     [SerializeField] private Vector3 boxColliderCenter;
+
 
     //------------------------------------------------
     // movement
@@ -94,66 +115,131 @@ public class CharacterControllerRB : MonoBehaviour
         input = GetComponent<ControllerInputManager>();
         boxCollider = GetComponent<BoxCollider>();
         collisionManager =  GetComponent<CollisionManager>();
+        animationHandler = GetComponent<AnimationHandler>();  //??
 
         //-------------------------------------------------------------------------------
         // step climb setup / set y position of raycast to stepHeight transform position;
-        stepRayUpper.transform.localPosition = new Vector3(stepRayUpper.transform.position.x, stepHeight, stepRayUpper.transform.position.z);
+        //stepRayUpper.transform.localPosition = new Vector3(stepRayUpper.transform.position.x, stepHeight, stepRayUpper.transform.position.z);
     }
 
     //-----------------------------------------------
     private void FixedUpdate()
     {
-
+       
 
         //-----------------------------------------------
-        if (collisionManager.inCockpit)
+        if (collisionManager.inCockpitZone)
         {
-            if (interactToggle == 1)
-            {
-                isSitting = true;
-            }
+            if (interactToggle == 1) { isPiloting = true; }
 
-            if (interactToggle == 0)
-            {
-                isSitting = false;
-            }
+            if (interactToggle == 0 ) { isPiloting = false; }
         }
 
+        if (!collisionManager.inCockpitZone && isPiloting)
+        {
+            interactToggle = 0;
+            isPiloting = false;
+        }
+
+        //-----------------------------------------------
+        if (collisionManager.inCablePuzzleZone)
+        {
+            if (interactToggle == 1) { isSolvingCablePuzzle = true; }
+
+            if (interactToggle == 0) { isSolvingCablePuzzle = false; }
+        }
+
+        
+        if (!collisionManager.inCablePuzzleZone && isSolvingCablePuzzle)
+        {
+            interactToggle = 0;
+            isSolvingCablePuzzle = false;
+        }
+
+        //-----------------------------------------------
+        if (collisionManager.inTerminalPuzzleZone)
+        {
+            if (interactToggle == 1) { isSolvingTerminalPuzzle = true; }
+
+            if (interactToggle == 0) { isSolvingTerminalPuzzle = false; }
+        }
+
+        if (!collisionManager.inTerminalPuzzleZone && isSolvingTerminalPuzzle)
+        {
+            interactToggle = 0;
+            isSolvingTerminalPuzzle = false;
+        }
+
+        //-----------------------------------------------
+        if (collisionManager.inFireZone)
+        {
+            if (interactToggle == 1) { isAiming = true; }
+
+            if (interactToggle == 0) { isAiming = false; }
+        }
+
+
+        if (!collisionManager.inFireZone && isAiming)
+        {
+            interactToggle = 0;
+            isAiming = false;
+        }
+
+
+        //---------------------
+        // Reset interaction toggle
         if (interactToggle > 1)
         {
             interactToggle = 0;
         }
 
 
-        //-----------------------------------
-        // check if player is grounded
-        isGrounded = groundCheck.isGrounded();
 
-        //-----------------------------------
-        // jump
-        handleJump();
+        //-----------------------------------------------
+        handleMovementLogic();
 
         //-----------------------------------------------
         // if player is grounded normal motion is applied
-        if (isGrounded && !isSitting)       
+        if (isGrounded)       
         {
-            handleDirection();
-            handleVelocity();
             handleRotation();
-            handleSteps();
-            handleCrouch();
+
+            if (!isPiloting)
+            {
+                // Action Movement
+                handleJump();       // jump
+                handleCrouch();     // crouch
+
+                // Basic Movement
+                handleSteps();
+                handleDirection();
+                handleVelocity();
+            }
+
+
         }
+
+
+        //-----------------------------------------
+        // variables for the animator
+        if (isGrounded)
+        {
+            velocityY = 0; 
+        }
+
+        if (!isGrounded)
+        {
+            velocityY = rb.velocity.y;
+        }
+        
+        normalizedVelocity = rb.velocity.normalized;
+
 
         //------------------------------------
         // Final Velocity applied to RigidBody
         //------------------------------------
-
-        velocityY = rb.velocity.y;
-
-        rb.velocity = new Vector3 (0, velocityY, velocityX);
-
-        //-----------------------------------------
-        normalizedVelocity = rb.velocity.normalized;    
+        rb.velocity = new Vector3 (0, rb.velocity.y, velocityX);
+        //------------------------------------
 
     }
 
@@ -161,37 +247,60 @@ public class CharacterControllerRB : MonoBehaviour
     //-----------------------------------------------
     //-------------------Handlers--------------------
     //-----------------------------------------------
-    private void handleCrouch()
+    private void handleMovementLogic()
     {
-        // reset crouch
-        if (crouchToggle > 1) { crouchToggle = 0; }
+        //-----------------------------------
+        // check if player is grounded
+        isGrounded = groundCheck.isGrounded();
 
+        //-----------------------------------
+        // Check Jumping State
+        // Jumping | going up
+        if (!isGrounded && normalizedVelocity.y > 0)
+        {
+            isJumping = true;
+            isFalling = false;
+        }
+
+        // Jumping | going down
+        if (!isGrounded && normalizedVelocity.y < 0)
+        {
+            isFalling = true;
+            isJumping = false;
+        }
+        //-----------------------------------
+
+        //-----------------------------------
+        // Check Crouched State
+        if (crouchToggle > 1) { crouchToggle = 0; }          // reset crouch
         if (crouchToggle == 0) { isCrouched = false; }
         if (crouchToggle == 1) { isCrouched = true; }
-        if (input.isJumpPressed && isCrouched) { crouchToggle += 1; }
+        if (isCrouched && isFalling) { crouchToggle += 1; }  // disable crouch if jumping
 
+    }
 
+    //-----------------------------------------------
+    private void handleCrouch()
+    {
         // change mass when crouched as box collider is half the size
         // prevents jumping jigher when crouched
         if (isCrouched)
         {
             // if crouched
-            rb.mass = 2;
-            boxCollider.center = new Vector3(0, 0.65f, 0);
+            rb.centerOfMass = new Vector3(0, 0.9f, 0);
+            boxCollider.center = new Vector3(0, 0.64f, 0);
             boxCollider.size = new Vector3(0.5f, 1.3f, 0.75f);
         }
 
         if (!isCrouched)
         {
             // if standing
-            rb.mass = 1;
+            new Vector3(0, 0.9f, 0);
             boxCollider.center = new Vector3(0, 0.89f, 0);
             boxCollider.size = new Vector3(0.5f, 1.8f, 0.75f);
         }
 
-
     }
-
 
     //-----------------------------------------------
     private void handleJump()
@@ -200,25 +309,10 @@ public class CharacterControllerRB : MonoBehaviour
         {
             isJumping = false;
             isFalling = false;
-      
         }
 
-        // going up
-        if (!isGrounded && normalizedVelocity.y > 0)
-        {
-            isJumping = true;
-            isFalling = false;
-        }
-
-        // going down
-        if (!isGrounded && normalizedVelocity.y < 0)
-        {
-            isFalling = true;
-            isJumping = false;
-        }
-
-
-        if (isGrounded && input.isJumpPressed)
+        // add force to rigid body to implement jump
+        if (input.isJumpPressed)
         {
             rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
         }
@@ -243,8 +337,8 @@ public class CharacterControllerRB : MonoBehaviour
     private void handleVelocity()
     {
 
-
         // apply changes to acceleration and decceleration
+        // if  walking | running | idle
         if (!input.isRunPressed && !isCrouched)
         {
             maxVelocity = walkSpeed;
@@ -343,18 +437,24 @@ public class CharacterControllerRB : MonoBehaviour
         Quaternion currentRotation;
         currentRotation = transform.rotation;
 
-        if (input.isMovementPressed && !isSitting)
+        if (input.isMovementPressed && !isPiloting && !isSolvingCablePuzzle && !isSolvingTerminalPuzzle)
         {
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
             rb.MoveRotation(Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame * Time.deltaTime));
-
-            //Debug.Log(targetRotation);
+            //Debug.Log(currentRotation);
+            
         } 
-        else if (isSitting)
+        else if (isPiloting)
         {
             Quaternion targetRotation = Quaternion.LookRotation(new Vector3(0, 0, -1));
             rb.MoveRotation(Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame * Time.deltaTime));
 
+        }
+        else if (isSolvingCablePuzzle || isSolvingTerminalPuzzle)
+        {
+            //Quaternion targetRotation = Quaternion.LookRotation(new Vector3(0, 0, rotation));
+            Quaternion targetRotation = new Quaternion(0, -.75f, 0, .75f);
+            rb.MoveRotation(Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame * Time.deltaTime));
         }
 
     }
@@ -365,43 +465,42 @@ public class CharacterControllerRB : MonoBehaviour
     {
         // check lower step using raycast
         RaycastHit hitLower;
-        if (Physics.Raycast(stepRayLower.transform.position, transform.transform.TransformDirection(Vector3.forward), out hitLower, lowerRaycastDistance))
+        if (Physics.Raycast(stepRayLower.transform.position, transform.transform.TransformDirection(Vector3.forward), out hitLower, lowerRaycastDistance, platform))
         {
 
             // check higher step is not hitting anything using raycast
             RaycastHit hitUpper;
-            if (!Physics.Raycast(stepRayUpper.transform.position, transform.transform.TransformDirection(Vector3.forward), out hitUpper, upperRaycastDistance))
+            if (!Physics.Raycast(stepRayUpper.transform.position, transform.transform.TransformDirection(Vector3.forward), out hitUpper, upperRaycastDistance, platform))
             {
 
-                rb.position -= new Vector3(0f, -stepSmooth, 0f);
-                //Vector3 interpolatedPosition = Vector3.Lerp(rb.position, rb.position - new Vector3(0f, -stepSmooth, 0f), Time.fixedDeltaTime * .8f);
-                //rb.MovePosition(interpolatedPosition);
+                //rb.position += new Vector3(0f, stepSmooth, 0f);
+                Vector3 interpolatedPosition = Vector3.Lerp(rb.position, rb.position - new Vector3(0f, -stepSmooth, 0f), Time.fixedDeltaTime * 20);
+                rb.MovePosition(interpolatedPosition);
             }
 
         }
 
-        // check diagonal steps, if player is in mid turn
-        RaycastHit hitLower45;
-        if (Physics.Raycast(stepRayLower.transform.position, transform.transform.TransformDirection(1.25f,0,1), out hitLower45, lowerRaycastDistance))
-        {
-            RaycastHit hitUpper45;
-            if (!Physics.Raycast(stepRayUpper.transform.position, transform.transform.TransformDirection(1.25f,0,1), out hitUpper45, upperRaycastDistance))
-            {
-                rb.position -= new Vector3(0f, -stepSmooth, 0f);
-            }
-        }
+        //// check diagonal steps, if player is in mid turn
+        //RaycastHit hitLower45;
+        //if (Physics.Raycast(stepRayLower.transform.position, transform.transform.TransformDirection(1.25f,0,1), out hitLower45, lowerRaycastDistance, platform))
+        //{
+        //    RaycastHit hitUpper45;
+        //    if (!Physics.Raycast(stepRayUpper.transform.position, transform.transform.TransformDirection(1.25f,0,1), out hitUpper45, upperRaycastDistance, platform))
+        //    {
+        //        rb.position -= new Vector3(0f, -stepSmooth, 0f);
+        //    }
+        //}
 
-        RaycastHit hitLowerMinus45;
-        if (Physics.Raycast(stepRayLower.transform.position, transform.transform.TransformDirection(-1.25f, 0, 1), out hitLowerMinus45, lowerRaycastDistance))
-        {
-            RaycastHit hitUpperMinus45;
-            if (!Physics.Raycast(stepRayUpper.transform.position, transform.transform.TransformDirection(-1.25f, 0, 1), out hitUpperMinus45,upperRaycastDistance))
-            {
-                rb.position -= new Vector3(0f, -stepSmooth, 0f);
-            }
-        }
+        //RaycastHit hitLowerMinus45;
+        //if (Physics.Raycast(stepRayLower.transform.position, transform.transform.TransformDirection(-1.25f, 0, 1), out hitLowerMinus45, lowerRaycastDistance, platform))
+        //{
+        //    RaycastHit hitUpperMinus45;
+        //    if (!Physics.Raycast(stepRayUpper.transform.position, transform.transform.TransformDirection(-1.25f, 0, 1), out hitUpperMinus45,upperRaycastDistance, platform))
+        //    {
+        //        rb.position -= new Vector3(0f, -stepSmooth, 0f);
+        //    }
+        //}
     }
-
 
 
 }//--------------------

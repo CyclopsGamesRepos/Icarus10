@@ -9,6 +9,7 @@ public class ControllerInputManager : MonoBehaviour
     // declare references;
     private InputControl inputControl;
     private CharacterControllerRB characterController;
+    private CollisionManager collisionManager;
 
     // movement
     public float currentMovement;
@@ -17,12 +18,18 @@ public class ControllerInputManager : MonoBehaviour
     public bool isJumpPressed;
     public bool isCrouchPressed;
 
+    public float currentAim;
+    public bool isAimPressed;
+
+    public bool isShootPressed;
+
     //-----------------------------------------------
     public void Awake()
     {
         // initially set reference variables;
         inputControl = new InputControl();
         characterController = GetComponent<CharacterControllerRB>();
+        collisionManager = GetComponent<CollisionManager>();
 
         //------------------------------------------------------------
         // callback function for: movement input;
@@ -45,6 +52,14 @@ public class ControllerInputManager : MonoBehaviour
         // callback function for: Sitting input;
         inputControl.CharacterControls.Interact.started += onInteractInput;
         inputControl.CharacterControls.Interact.canceled += onInteractInput;
+
+        // callback function for: Aim input;
+        inputControl.CharacterControls.Aim.started += onAimInput;
+        inputControl.CharacterControls.Aim.canceled += onAimInput;
+
+        // callback function for: Fire input;
+        inputControl.CharacterControls.Shoot.started += onShootInput;
+        inputControl.CharacterControls.Shoot.canceled += onShootInput;
         //------------------------------------------------------------
 
     }
@@ -79,7 +94,7 @@ public class ControllerInputManager : MonoBehaviour
         // increment toggle variable on release
         if (context.canceled)
         {
-            characterController.crouchToggle += 1;
+             characterController.crouchToggle += 1;
         }
 
     }   // returns when 'c' is pressed (Toggle Action)
@@ -91,10 +106,37 @@ public class ControllerInputManager : MonoBehaviour
         // increment toggle variable on release
         if (context.canceled)
         {
-            characterController.interactToggle += 1;
+            if (collisionManager.interactionAllowed)
+            {
+                characterController.interactToggle += 1;
+            }
         }
 
     }   // returns when 'e' is pressed (Toggle Action)
+
+
+    //-----------------------------------------------
+    private void onAimInput(InputAction.CallbackContext context)
+    {
+
+        // assign movement input to variable / Walk;
+        currentAim = context.ReadValue<float>();
+
+        // isMovementPressed is true if current movement does not equal 0
+        isAimPressed = currentAim != 0;
+
+
+    }   // returns a -1 or +1 value from keyboard ('a' or 'd')
+
+
+    //-----------------------------------------------
+    private void onShootInput(InputAction.CallbackContext context)
+    {
+
+        isShootPressed = context.ReadValueAsButton();
+
+    }   // returns when 'f' is pressed
+
 
     //-----------------------------------------------
     private void onJumpInput(InputAction.CallbackContext context)
