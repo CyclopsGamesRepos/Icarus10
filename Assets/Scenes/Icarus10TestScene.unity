@@ -1824,6 +1824,7 @@ MonoBehaviour:
   isCrouchPressed: 0
   currentAim: 0
   isAimPressed: 0
+  isShootPressed: 0
 --- !u!114 &1316188831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2086,6 +2087,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1627236095}
   - component: {fileID: 1627236096}
+  - component: {fileID: 1627236097}
   m_Layer: 9
   m_Name: Fire
   m_TagString: Fire
@@ -2121,6 +2123,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1627236097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627236094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 261dd7d82f44b774b982e6be42493b1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1673159176
 GameObject:
   m_ObjectHideFlags: 0

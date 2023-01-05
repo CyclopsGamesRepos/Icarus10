@@ -21,6 +21,8 @@ public class ControllerInputManager : MonoBehaviour
     public float currentAim;
     public bool isAimPressed;
 
+    public bool isShootPressed;
+
     //-----------------------------------------------
     public void Awake()
     {
@@ -51,10 +53,13 @@ public class ControllerInputManager : MonoBehaviour
         inputControl.CharacterControls.Interact.started += onInteractInput;
         inputControl.CharacterControls.Interact.canceled += onInteractInput;
 
-
-        // callback function for: aim input;
+        // callback function for: Aim input;
         inputControl.CharacterControls.Aim.started += onAimInput;
         inputControl.CharacterControls.Aim.canceled += onAimInput;
+
+        // callback function for: Fire input;
+        inputControl.CharacterControls.Shoot.started += onShootInput;
+        inputControl.CharacterControls.Shoot.canceled += onShootInput;
         //------------------------------------------------------------
 
     }
@@ -122,6 +127,16 @@ public class ControllerInputManager : MonoBehaviour
 
 
     }   // returns a -1 or +1 value from keyboard ('a' or 'd')
+
+
+    //-----------------------------------------------
+    private void onShootInput(InputAction.CallbackContext context)
+    {
+
+        isShootPressed = context.ReadValueAsButton();
+
+    }   // returns when 'f' is pressed
+
 
     //-----------------------------------------------
     private void onJumpInput(InputAction.CallbackContext context)
