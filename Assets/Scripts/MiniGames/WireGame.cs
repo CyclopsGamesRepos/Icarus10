@@ -13,7 +13,6 @@ public class WireGame : MonoBehaviour
     [SerializeField] GameObject doneButton;     // access to the button to start when the game is complete
 
     // public variables for use in other scripts
-    //public Wires selectedWire;                  // what wire is currently selected (may not be needed)
     public Wires mouseOverWire;                 // what wire the mouse is hovering over
     public int wiresToConnect;                  // how many wires need to be connected
 
