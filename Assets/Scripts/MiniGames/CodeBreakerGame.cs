@@ -39,6 +39,7 @@ public class CodeBreakerGame : MonoBehaviour
     private int hundredsDigit;                                  // the hundreds digit of the attemtped code - linked to a slider
     private int tensDigit;                                      // the tens digit of the attemtped code - linked to a slider
     private int onesDigit;                                      // the ones digit of the attemtped code - linked to a slider
+    private int timesAttempted;                                 // keep track of the times attempted to increase time for fade in to make it easier over time
 
     /// <summary>
     /// OnEnable is called before the first frame update and every time this object is enabled
@@ -57,6 +58,7 @@ public class CodeBreakerGame : MonoBehaviour
         checkCodeButton.SetActive(true);
         doneButton.SetActive(false);
         problemSolved = false;
+        timesAttempted = 0;
 
     } // end OnEnable
 
@@ -143,11 +145,12 @@ public class CodeBreakerGame : MonoBehaviour
             if (fadedIn)
             {
                 SetRandomCode();
+                timesAttempted++;
             }
             // otherwise continue fading in the code
             else
             {
-                fadeTimer = TIME_TO_FADE;
+                fadeTimer = TIME_TO_FADE + (timesAttempted * FADE_INCREMENT);
                 fadeValue += FADE_INCREMENT;
                 UpdateActualCodeFade();
 
