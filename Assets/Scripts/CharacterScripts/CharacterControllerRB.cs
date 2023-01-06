@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
-using UnityEditor.ShaderGraph.Internal;
 using static UnityEngine.ProBuilder.AutoUnwrapSettings;
 using UnityEngine.Networking.Types;
 using UnityEngine.Windows;

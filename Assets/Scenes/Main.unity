@@ -835,6 +835,16 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1057838142}
+    - target: {fileID: 1202376505674300753, guid: 841072338ea1378488801fee5ed86302,
+        type: 3}
+      propertyPath: m_VersionIndex
+      value: 2076
+      objectReference: {fileID: 0}
+    - target: {fileID: 6987454465045387351, guid: 841072338ea1378488801fee5ed86302,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6987454465346917632, guid: 841072338ea1378488801fee5ed86302,
         type: 3}
       propertyPath: m_RootOrder
@@ -894,6 +904,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Level
+      objectReference: {fileID: 0}
+    - target: {fileID: 6987454466571049984, guid: 841072338ea1378488801fee5ed86302,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8261551174860129986, guid: 841072338ea1378488801fee5ed86302,
         type: 3}
@@ -1469,16 +1484,17 @@ MonoBehaviour:
   winImage: {fileID: 21300000, guid: 66c5b1d83244c3f4bb316086171c6ebb, type: 3}
   endGameText: {fileID: 776436188}
   timerText: {fileID: 1346755462}
-  problems:
-  - {fileID: 1291732597}
-  - {fileID: 496104110}
   problemMaterial: {fileID: 2100000, guid: fd9587c4bacea584e9b8fc103803ae86, type: 2}
   wireProblemAreas:
   - {fileID: 338078185}
   codeProblemAreas:
   - {fileID: 55790600}
+  fireProblemAreas:
+  - {fileID: 1150752695}
+  asteroidProblemAreas:
+  - {fileID: 1767643100}
   gameRunning: 0
-  currentPuzzleType: 0
+  currentProblemType: 0
   currentProblemLocation: 0
 --- !u!4 &320181526
 Transform:
@@ -1544,6 +1560,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
+  - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1650,6 +1667,20 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &330585548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b7644c74ab3b3e4f9f4bf48cc14e089, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 408143907}
+  cameraOffsetPosition: {x: 7, y: 3, z: 0}
 --- !u!1 &338078185 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6987454466438209544, guid: 841072338ea1378488801fee5ed86302,
@@ -1866,6 +1897,12 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!1 &408143907 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2314266216721390695, guid: 003791495f503cf47a9ed8a4d94f6869,
+    type: 3}
+  m_PrefabInstance: {fileID: 187932824}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -2592,6 +2629,27 @@ RectTransform:
   m_AnchoredPosition: {x: -175, y: 50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &605371479 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6987454466571049984, guid: 841072338ea1378488801fee5ed86302,
+    type: 3}
+  m_PrefabInstance: {fileID: 180805747}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &605371482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605371479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24856a3a31c1d5c4e9b40c4e005d615d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 320181525}
+  firePrefab: {fileID: 2961402890741435573, guid: 7e4a92ca7303dff45b48ce7799754aa1,
+    type: 3}
 --- !u!1 &616234907
 GameObject:
   m_ObjectHideFlags: 0
@@ -3704,7 +3762,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1170898
+  m_Name: pb_Mesh-1446
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4662,6 +4720,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1130403897}
   m_CullTransparentMesh: 1
+--- !u!1 &1150752695 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5663768131168259274, guid: 841072338ea1378488801fee5ed86302,
+    type: 3}
+  m_PrefabInstance: {fileID: 180805747}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1150752700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150752695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2405cb6a2bf613e4ba1220b1a6a49cbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterController: {fileID: 1902201007}
+  gameManager: {fileID: 320181525}
+  problemType: 2
+  problemToSolve: {fileID: 605371479}
+  hasProblem: 0
 --- !u!1 &1196593524
 GameObject:
   m_ObjectHideFlags: 0
@@ -6826,6 +6907,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1732653819}
   m_CullTransparentMesh: 1
+--- !u!1 &1767643100 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6987454465940039084, guid: 841072338ea1378488801fee5ed86302,
+    type: 3}
+  m_PrefabInstance: {fileID: 180805747}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1776729733
 GameObject:
   m_ObjectHideFlags: 0
@@ -7149,7 +7236,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 187932824}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 408143907}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75461ddd5886ef24294c2c7ff3bab319, type: 3}

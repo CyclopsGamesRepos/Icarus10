@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using static GameManager;
 
-public class PuzzleArea : MonoBehaviour
+public class ProblemArea : MonoBehaviour
 {
     // Set up serialized variables for this mini game
     [Header("Character controller")]
@@ -33,6 +33,7 @@ public class PuzzleArea : MonoBehaviour
         {
             bool startPuzzle = false;
 
+            // some things need to happen if it is a UI puzzle type
             switch(problemType)
             {
                 case GameManager.ProblemTypes.FIX_WIRES:
@@ -53,7 +54,9 @@ public class PuzzleArea : MonoBehaviour
                     }
                     break;
 
+                // default is to start the puzzle (for fire) as the player needs to walk there
                 default: 
+                    startPuzzle= true;
                     break;
             }
 
