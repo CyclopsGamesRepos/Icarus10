@@ -460,7 +460,7 @@ public class CharacterControllerRB : MonoBehaviour
         Quaternion currentRotation;
         currentRotation = transform.rotation;
 
-        if (input.isMovementPressed && !isInteracting)
+        if (input.isMovementPressed && !isInteracting && !animationHandler.inPilotingTransition && !animationHandler.inPuzzleTransition)
         {
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
             rb.MoveRotation(Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame * Time.deltaTime));

@@ -191,6 +191,11 @@ public class AnimationHandler : MonoBehaviour
             inPilotingTransition = false;
         }
 
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Stand to Sit"))
+        {
+            inPilotingTransition = true;
+        }
+
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Flip Switches High"))
         {
             inPilotingTransition = true;
@@ -236,6 +241,11 @@ public class AnimationHandler : MonoBehaviour
         }
 
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Working on Device"))
+        {
+            inPuzzleTransition = true;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Stand to Crouch"))
         {
             inPuzzleTransition = true;
         }
