@@ -126,102 +126,22 @@ public class CharacterControllerRB : MonoBehaviour
        
 
         //-----------------------------------------------
-        if (collisionManager.inCockpitZone)
-        {
-            if (interactToggle == 1) { isPiloting = true; }
-
-            if (interactToggle == 0 ) { isPiloting = false; }
-        }
-
-        if (!collisionManager.inCockpitZone && isPiloting)
-        {
-            interactToggle = 0;
-            isPiloting = false;
-        }
-
-        //-----------------------------------------------
-        if (collisionManager.inCablePuzzleZone)
-        {
-            if (interactToggle == 1) { isSolvingCablePuzzle = true; }
-
-            if (interactToggle == 0) { isSolvingCablePuzzle = false; }
-        }
-
-        
-        if (!collisionManager.inCablePuzzleZone && isSolvingCablePuzzle)
-        {
-            interactToggle = 0;
-            isSolvingCablePuzzle = false;
-        }
-
-        //-----------------------------------------------
-        if (collisionManager.inTerminalPuzzleZone)
-        {
-            if (interactToggle == 1) { isSolvingTerminalPuzzle = true; }
-
-            if (interactToggle == 0) { isSolvingTerminalPuzzle = false; }
-        }
-
-        if (!collisionManager.inTerminalPuzzleZone && isSolvingTerminalPuzzle)
-        {
-            interactToggle = 0;
-            isSolvingTerminalPuzzle = false;
-        }
-
-        //-----------------------------------------------
-        if (collisionManager.inFireZone)
-        {
-            if (interactToggle == 1) { isAiming = true; }
-
-            if (interactToggle == 0) { isAiming = false; }
-        }
-
-
-        if (!collisionManager.inFireZone && isAiming)
-        {
-            interactToggle = 0;
-            isAiming = false;
-        }
-
-
-        //---------------------
-        // Reset interaction toggle
-        if (interactToggle > 1)
-        {
-            interactToggle = 0;
-        }
-
-        if (isPiloting || isSolvingCablePuzzle || isSolvingTerminalPuzzle)
-        {
-            isInteracting = true;
-        }
-        else
-        {
-            isInteracting = false;
-        }
-
-        // set velocityX to 0 to prevent charcter continuing to move
-        if (isInteracting)
-        {
-            velocityX = 0;
-        }
-
-
-
-        //-----------------------------------------------
+        handleInteractionLogic();
         handleMovementLogic();
 
         //-----------------------------------------------
         // if player is grounded normal motion is applied
         if (isGrounded)       
         {
-
+            // set player rotation
             handleRotation();
 
+
+            //check if player is interacting to allow movement
             if (!isInteracting)
             {
 
-
+                // check if player is in animation transition before allowing movement control
                 if (!animationHandler.inPilotingTransition && !animationHandler.inPuzzleTransition)
                 {
                     // Action Movement
@@ -232,7 +152,6 @@ public class CharacterControllerRB : MonoBehaviour
                     handleSteps();
                     handleDirection();
                     handleVelocity();
-
 
                 }
             }
@@ -300,6 +219,101 @@ public class CharacterControllerRB : MonoBehaviour
 
     }
 
+    private void handleInteractionLogic()
+    {
+        //-----------------------------------------------
+        // check if player is in pilot zone and set state
+        if (collisionManager.inCockpitZone)
+        {
+            if (interactToggle == 1) { isPiloting = true; }
+
+            if (interactToggle == 0) { isPiloting = false; }
+        }
+
+        // reset toggle on leaving zone
+        if (!collisionManager.inCockpitZone && isPiloting)
+        {
+            interactToggle = 0;
+            isPiloting = false;
+        }
+
+
+        //-----------------------------------------------
+        // check if player is in cable puzzle zone and set state
+        if (collisionManager.inCablePuzzleZone)
+        {
+            if (interactToggle == 1) { isSolvingCablePuzzle = true; }
+
+            if (interactToggle == 0) { isSolvingCablePuzzle = false; }
+        }
+
+        // reset toggle on leaving zone
+        if (!collisionManager.inCablePuzzleZone && isSolvingCablePuzzle)
+        {
+            interactToggle = 0;
+            isSolvingCablePuzzle = false;
+        }
+
+        //-----------------------------------------------
+        // check if player is in terminal puzzle zone and set state
+        if (collisionManager.inTerminalPuzzleZone)
+        {
+            if (interactToggle == 1) { isSolvingTerminalPuzzle = true; }
+
+            if (interactToggle == 0) { isSolvingTerminalPuzzle = false; }
+        }
+
+        // reset toggle on leaving zone
+        if (!collisionManager.inTerminalPuzzleZone && isSolvingTerminalPuzzle)
+        {
+            interactToggle = 0;
+            isSolvingTerminalPuzzle = false;
+        }
+
+        //-----------------------------------------------
+        // check if player is in fire zone and set state
+        if (collisionManager.inFireZone)
+        {
+            if (interactToggle == 1) { isAiming = true; }
+
+            if (interactToggle == 0) { isAiming = false; }
+        }
+
+        // reset toggle on leaving zone
+        if (!collisionManager.inFireZone && isAiming)
+        {
+            interactToggle = 0;
+            isAiming = false;
+        }
+
+        //---------------------
+        // Reset interaction toggle
+        if (interactToggle > 1)
+        {
+            interactToggle = 0;
+        }
+
+
+        //------------------------------------------------------------------------------------------
+        // interaction variable used to in rotation code to prevent character rotating when in state
+        if (isPiloting || isSolvingCablePuzzle || isSolvingTerminalPuzzle)
+        {
+            isInteracting = true;
+        }
+        else
+        {
+            isInteracting = false;
+        }
+
+        //----------------------------------------------------------
+        // set velocityX to 0 to prevent charcter continuing to move
+        if (isInteracting)
+        {
+            velocityX = 0;
+        }
+
+
+    }
     //-----------------------------------------------
     private void handleCrouch()
     {

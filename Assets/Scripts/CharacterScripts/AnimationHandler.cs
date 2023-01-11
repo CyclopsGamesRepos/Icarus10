@@ -78,60 +78,13 @@ public class AnimationHandler : MonoBehaviour
 
 
         aimHeightBlendHash = Animator.StringToHash("aimHeightBlend");
-        
         //----------------------------------------------------------
-
 
     }
 
     //-----------------------------------------------
     private void FixedUpdate()
     {
-
-
-
-
-
-
-
-
-
-
-
-        // transition into aim
-        if (characterController.isAiming)
-        {
-            aimingBoolToFloat = 1f; 
-        }
-
-        //---------------------------------
-        // Reset Aim Position
-        if (!characterController.isAiming)
-        {
-            aimingBoolToFloat = 0f;
-            aimHeightBlendAmount = 1f;
-            animator.SetFloat(aimHeightBlendHash, aimHeightStartPosition);
-        }
-
-        float currentAimingLayerWeight = animator.GetLayerWeight(animator.GetLayerIndex("AimingLayer"));
-        aimingLayerWeight = Mathf.Lerp(currentAimingLayerWeight, aimingBoolToFloat, Time.fixedDeltaTime * 4f);
-        animator.SetLayerWeight(animator.GetLayerIndex("AimingLayer"), aimingLayerWeight);
-
-
-            if (aimHeightBlendAmount <= maxAim && aimHeightBlendAmount >= minAim)
-            {
-                if (controllerInputManager.isAimPressed)
-                {
-                    aimHeightBlendAmount += controllerInputManager.currentAim * (Time.fixedDeltaTime * aimSpeed);
-                    animator.SetFloat(aimHeightBlendHash, aimHeightBlendAmount);
-                }
-
-                if (aimHeightBlendAmount > maxAim) { aimHeightBlendAmount = maxAim; }
-                if (aimHeightBlendAmount < minAim) { aimHeightBlendAmount = minAim; }
-            }
-
-     
-
 
         //---------Constant checks need to control animator logic-----------------
         // set bool isGrounded in animator
@@ -143,10 +96,11 @@ public class AnimationHandler : MonoBehaviour
 
 
         //--------------------------Interaction Animations------------------------
+        handleAim();
         handlePuzzles();
         handlePilotAnimation();
 
-        // Movement animations
+        //-------------------------- Movement animations---------------------------
         handleMovementAnimation();
         handleJumpAnimation();
         //------------------------------------------------------------------------
@@ -268,6 +222,42 @@ public class AnimationHandler : MonoBehaviour
         terminalLayerWeight = Mathf.Lerp(currentTerminalLayerWeight, terminalBoolToFloat, Time.fixedDeltaTime * 1.8f);
 
         animator.SetLayerWeight(animator.GetLayerIndex("TerminalPuzzleLayer"), terminalLayerWeight);
+    }
+
+    //-----------------------------------------------
+    private void handleAim()
+    {
+        // transition into aim
+        if (characterController.isAiming)
+        {
+            aimingBoolToFloat = 1f;
+        }
+
+        //---------------------------------
+        // Reset Aim Position
+        if (!characterController.isAiming)
+        {
+            aimingBoolToFloat = 0f;
+            aimHeightBlendAmount = 1f;
+            animator.SetFloat(aimHeightBlendHash, aimHeightStartPosition);
+        }
+
+        float currentAimingLayerWeight = animator.GetLayerWeight(animator.GetLayerIndex("AimingLayer"));
+        aimingLayerWeight = Mathf.Lerp(currentAimingLayerWeight, aimingBoolToFloat, Time.fixedDeltaTime * 4f);
+        animator.SetLayerWeight(animator.GetLayerIndex("AimingLayer"), aimingLayerWeight);
+
+
+        if (aimHeightBlendAmount <= maxAim && aimHeightBlendAmount >= minAim)
+        {
+            if (controllerInputManager.isAimPressed)
+            {
+                aimHeightBlendAmount += controllerInputManager.currentAim * (Time.fixedDeltaTime * aimSpeed);
+                animator.SetFloat(aimHeightBlendHash, aimHeightBlendAmount);
+            }
+
+            if (aimHeightBlendAmount > maxAim) { aimHeightBlendAmount = maxAim; }
+            if (aimHeightBlendAmount < minAim) { aimHeightBlendAmount = minAim; }
+        }
     }
 
 

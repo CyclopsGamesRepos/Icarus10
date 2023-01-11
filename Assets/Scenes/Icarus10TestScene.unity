@@ -1974,9 +1974,9 @@ MonoBehaviour:
   aimSpeed: 1
   maxAim: 1.7
   minAim: 0.25
-  isIdle: 0
-  isInTransition: 0
   inPilotingTransition: 0
+  inPuzzleTransition: 0
+  inTerminalTransition: 0
 --- !u!65 &1538491219
 BoxCollider:
   m_ObjectHideFlags: 0
