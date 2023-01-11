@@ -43,14 +43,9 @@ public class AnimationHandler : MonoBehaviour
 
 
     //--------------------
-    //public bool standCheck;
-    //public bool idleCheck;
-    //public float timeCheck;
-
-    public bool isIdle;
-    public bool isInTransition;
-
     public bool inPilotingTransition;
+    public bool inPuzzleTransition;
+    public bool inTerminalTransition;
 
     //-----------------------------------------------
     private void Awake()
@@ -93,23 +88,7 @@ public class AnimationHandler : MonoBehaviour
     private void FixedUpdate()
     {
 
-        //standCheck = animator.GetCurrentAnimatorStateInfo(0).IsName("Sit to Stand");
-        //idleCheck = animator.GetCurrentAnimatorStateInfo(0).IsName("Idle");
-        //Debug.Log(animator.IsInTransition(0));
 
-        //if (animator.GetCurrentAnimatorStateInfo(0).IsName("Sit to Stand"))
-        //{
-        //    timeCheck = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-        //}
-        //if (!characterController.isSitting)
-        //{
-        //    if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1 && !animator.IsInTransition(0))
-        //    {
-        //        characterController.isStanding = true;
-        //    }
-        //}
-
-        // check if the player is in idle state
 
 
 
@@ -244,6 +223,22 @@ public class AnimationHandler : MonoBehaviour
         //----------------------------------------------------------------------------------------
         // Solving cable puzzle animation
         animator.SetBool(isSolvingCablePuzzleHash, characterController.isSolvingCablePuzzle);
+
+        //-----------------------------------------------------------------
+        // Logic to check cable puzzle animation state has finished
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Crouch to Stand"))
+        {
+            inPuzzleTransition = true;
+        }
+        else
+        {
+            inPuzzleTransition = false;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Working on Device"))
+        {
+            inPuzzleTransition = true;
+        }
 
 
         //----------------------------------------------------------------------------------------

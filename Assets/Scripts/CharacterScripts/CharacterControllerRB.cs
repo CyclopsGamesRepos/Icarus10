@@ -222,7 +222,7 @@ public class CharacterControllerRB : MonoBehaviour
             {
 
 
-                if (!animationHandler.inPilotingTransition)
+                if (!animationHandler.inPilotingTransition && !animationHandler.inPuzzleTransition)
                 {
                     // Action Movement
                     handleJump();       // jump
