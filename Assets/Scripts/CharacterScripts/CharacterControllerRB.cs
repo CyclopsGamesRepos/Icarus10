@@ -31,17 +31,16 @@ public class CharacterControllerRB : MonoBehaviour
     public bool isFalling;
     public bool isCrouched;
     public int crouchToggle;
- 
-
-    public bool isStanding;
-
     public int interactToggle;
 
-    public bool actionAllowed;
-    public bool movementAllowed;
+
+    //public bool isStanding;
+    //public bool actionAllowed;
+    //public bool movementAllowed;
+    public bool isInteracting;
 
     //------------------------
-    public bool isInteracting;
+
 
     public bool isPiloting;
     public bool isSolvingCablePuzzle;
@@ -192,6 +191,21 @@ public class CharacterControllerRB : MonoBehaviour
             interactToggle = 0;
         }
 
+        if (isPiloting || isSolvingCablePuzzle || isSolvingTerminalPuzzle)
+        {
+            isInteracting = true;
+        }
+        else
+        {
+            isInteracting = false;
+        }
+
+        // set velocityX to 0 to prevent charcter continuing to move
+        if (isInteracting)
+        {
+            velocityX = 0;
+        }
+
 
 
         //-----------------------------------------------
@@ -201,18 +215,26 @@ public class CharacterControllerRB : MonoBehaviour
         // if player is grounded normal motion is applied
         if (isGrounded)       
         {
+
             handleRotation();
 
-            if (!isPiloting)
+            if (!isInteracting)
             {
-                // Action Movement
-                handleJump();       // jump
-                handleCrouch();     // crouch
 
-                // Basic Movement
-                handleSteps();
-                handleDirection();
-                handleVelocity();
+
+                if (!animationHandler.inPilotingTransition)
+                {
+                    // Action Movement
+                    handleJump();       // jump
+                    handleCrouch();     // crouch
+
+                    // Basic Movement
+                    handleSteps();
+                    handleDirection();
+                    handleVelocity();
+
+
+                }
             }
 
 
@@ -426,6 +448,8 @@ public class CharacterControllerRB : MonoBehaviour
             velocityX = 0;
         }
 
+
+
     }
 
     //-----------------------------------------------
@@ -436,7 +460,7 @@ public class CharacterControllerRB : MonoBehaviour
         Quaternion currentRotation;
         currentRotation = transform.rotation;
 
-        if (input.isMovementPressed && !isPiloting && !isSolvingCablePuzzle && !isSolvingTerminalPuzzle)
+        if (input.isMovementPressed && !isInteracting)
         {
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
             rb.MoveRotation(Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame * Time.deltaTime));

@@ -43,9 +43,14 @@ public class AnimationHandler : MonoBehaviour
 
 
     //--------------------
-    public bool standCheck;
-    public bool idleCheck;
-    public float timeCheck;
+    //public bool standCheck;
+    //public bool idleCheck;
+    //public float timeCheck;
+
+    public bool isIdle;
+    public bool isInTransition;
+
+    public bool inPilotingTransition;
 
     //-----------------------------------------------
     private void Awake()
@@ -103,7 +108,17 @@ public class AnimationHandler : MonoBehaviour
         //        characterController.isStanding = true;
         //    }
         //}
-     
+
+        // check if the player is in idle state
+
+
+
+
+
+
+
+
+
         // transition into aim
         if (characterController.isAiming)
         {
@@ -181,8 +196,43 @@ public class AnimationHandler : MonoBehaviour
     //-----------------------------------------------
     private void handlePilotAnimation()
     {
+        //-----------------------------------------------------------------
         // set bool isSitting in animator
         animator.SetBool(isPilotingHash, characterController.isPiloting);
+
+
+        //-----------------------------------------------------------------
+        // Logic to check piloting animation state has finished
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Sit to Stand"))
+        {
+            inPilotingTransition = true;
+        }
+        else
+        {
+            inPilotingTransition = false;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Flip Switches High"))
+        {
+            inPilotingTransition = true;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Flip Switches Low"))
+        {
+            inPilotingTransition = true;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Piloting"))
+        {
+            inPilotingTransition = true;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Piloting 1"))
+        {
+            inPilotingTransition = true;
+        }
+        //-----------------------------------------------------------------
+
 
     }
 
