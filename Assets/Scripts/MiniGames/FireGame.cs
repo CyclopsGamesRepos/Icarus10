@@ -6,7 +6,6 @@ using UnityEngine;
 public class FireGame : MonoBehaviour
 {
     // constant values
-    private const float FIRE_OFFSET = 1;                        // the offset for the fires being spawned by other fires
     private const int TIMER_TO_EXPAND = 3;                      // the fire duplicates itself over time (may need to move this elswhere
     private const int MAX_NUM_FIRES = 10;                       // don't let the fires get too out of control
 

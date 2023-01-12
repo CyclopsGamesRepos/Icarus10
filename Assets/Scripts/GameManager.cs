@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
         FIX_WIRES,
         CODE_BREAKER,
         FIRE,
-        //ASTEROIDS,
+        ASTEROIDS,
     }
 
     // Constant values
@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
     private float gameTimer;                                            // to keep track of the game time for end game
     private float problemTimer;                                         // keeps track of time to next problem
     private bool problemStarted = false;                                // to keep track of when problems occur and to reset timer
+    private bool problemActive = false;
     private int numProblemsFixed = 0;                                   // keeps track of how many problems have been fixed to check on end game
     private int numProblemTypes;                                        // the total number of problem types for the problem arrays
 
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
         problemAreas[0] = wireProblemAreas;
         problemAreas[1] = codeProblemAreas;
         problemAreas[2] = fireProblemAreas;
-        //problemAreas[3] = asteroidProblemAreas;
+        problemAreas[3] = asteroidProblemAreas;
 
     } // end Start
 
@@ -153,6 +154,26 @@ public class GameManager : MonoBehaviour
     } // RestartGame
 
     /// <summary>
+    /// Sets the whether the player is actively solving the problem or not
+    /// </summary>
+    /// <param name="activeState"></param>
+    public void SetProblemActive(bool activeState)
+    {
+        problemActive = activeState;
+
+    } // end SetProblemActive
+
+    /// <summary>
+    /// Returns wether the player is attempting to solve a problem
+    /// </summary>
+    /// <returns></returns>
+    public bool IsProblemActive()
+    {
+        return problemActive;
+
+    } // end IsProblemActive
+
+    /// <summary>
     /// Marks a problem as solved and starts the next problem timer
     /// </summary>
     public void MarkProblemSolved()
@@ -162,6 +183,7 @@ public class GameManager : MonoBehaviour
         // TODO add timer to launch next problem here
         problemTimer = TIME_TO_PROBLEM;
         problemStarted = false;
+        SetProblemActive(false);
 
         // put the original material back on the object
         problemAreas[currentProblemType][currentProblemLocation].GetComponent<MeshRenderer>().material = originalMaterial;
@@ -177,6 +199,16 @@ public class GameManager : MonoBehaviour
     {
         uiMenu.SetActive(false);
     }
+
+    /// <summary>
+    /// Adjusts the game timer by the given amount
+    /// </summary>
+    /// <param name="numSeconds">the number of seconds to add or remove (negative)</param>
+    public void AdjustGameTimer(int numSeconds)
+    {
+        gameTimer += numSeconds;
+
+    } // end AdjustGameTimer
 
     /// <summary>
     /// Updates the game time and text in the UI
@@ -206,7 +238,7 @@ public class GameManager : MonoBehaviour
             currentProblemType = Random.Range(0, numProblemTypes);
 
             // DEBUG: to test your specific problem, use the enum type here instead of the random one above (comment it out when done)
-            //currentProblemType = (int)ProblemTypes.FIRE;
+            currentProblemType = (int)ProblemTypes.ASTEROIDS;
 
             // now randomize the next problem location
             currentProblemLocation = Random.Range(0, problemAreas[currentProblemType].Length);
