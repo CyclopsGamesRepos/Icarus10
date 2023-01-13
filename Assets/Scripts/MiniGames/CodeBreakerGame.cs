@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class CodeBreakerGame : MonoBehaviour
 {
     // Constant values
-    public const string NOPE_MESSAGE = "Not quite, try again."; // message if the player gets it wrong
+    public const string NOPE_MESSAGE = "Try again";             // message if the player gets it wrong
     public const string SUCCESS_MESSAGE = "You didi it!";       // message if they get it right
     public const float FADE_INCREMENT = 0.1f;                   // the amount to increase the alpha fade of the actual code
     public const float TIME_TO_FADE = 0.5f;                     // time between fade in of actual code
@@ -24,9 +24,10 @@ public class CodeBreakerGame : MonoBehaviour
     [SerializeField] TMP_Text onesDigitText;                    // a link to the ones digit code text that will get updated when the slider gets updated
 
     [Header("UI Elements for checking and finished")]
-    [SerializeField] TMP_Text messageText;                       // a text box to let player know if they got the code or not
-    [SerializeField] GameObject checkCodeButton;                 // the button used to check the code - need to disable when the code is correct
-    [SerializeField] GameObject doneButton;                      // the button used to exit the game when it is done
+    [SerializeField] GameObject messageArea;                    // the message area for showing when correct or failure
+    [SerializeField] TMP_Text messageText;                      // a text box to let player know if they got the code or not
+    [SerializeField] GameObject checkCodeButton;                // the button used to check the code - need to disable when the code is correct
+    [SerializeField] GameObject doneButton;                     // the button used to exit the game when it is done
 
     // public variables for use in other scripts
 
@@ -54,7 +55,7 @@ public class CodeBreakerGame : MonoBehaviour
         UpdateOnesValue();
 
         // reset the game buttons and initial text
-        messageText.text = "Use Check Code button when ready";
+        messageText.text = NOPE_MESSAGE;
         checkCodeButton.SetActive(true);
         doneButton.SetActive(false);
         problemSolved = false;
@@ -87,6 +88,7 @@ public class CodeBreakerGame : MonoBehaviour
         if (userCode == randomCode)
         {
             messageText.text = SUCCESS_MESSAGE;
+            messageArea.SetActive(true);
             checkCodeButton.SetActive(false);
             doneButton.SetActive(true);
             problemSolved = true;
@@ -97,6 +99,8 @@ public class CodeBreakerGame : MonoBehaviour
         else
         {
             messageText.text = NOPE_MESSAGE;
+            messageArea.SetActive(true);
+            Invoke("TurnOffMessage", 2);
         }
     }
 
@@ -208,6 +212,16 @@ public class CodeBreakerGame : MonoBehaviour
         updatedColor.a = Mathf.Clamp(fadeValue, 0, 1);
         actualCodeText.color = updatedColor;
 
-    } // end UpdateActualCodeFade
+    } 
+    
+    // end UpdateSquareToFade
+    /// <summary>
+    /// Turns off the done message being displayed
+    /// </summary>
+    private void TurnOffMessage()
+    {
+        messageArea.SetActive(false);
+
+    }// end TurnOffMessage
 
 }
