@@ -46,6 +46,7 @@ public class ProblemArea : MonoBehaviour
                     break;
 
                 case ProblemTypes.CODE_BREAKER:
+                case ProblemTypes.SIMON_SAYS:
                     if (characterController.isSolvingTerminalPuzzle)
                     {
                         // turn off the in game UI
@@ -62,7 +63,7 @@ public class ProblemArea : MonoBehaviour
                     break;
 
                 // default is to start the puzzle (for fire) as the player needs to walk there
-                default: 
+                default:
                     startPuzzle = true;
                     break;
             }
@@ -71,8 +72,13 @@ public class ProblemArea : MonoBehaviour
             {
                 // set the problem as active
                 problemToSolve.SetActive(true);
-                gameManager.SetProblemActive(true);
                 hasProblem = false;
+
+                // set up the no follow cameara for most games (except fire)
+                if (problemType != ProblemTypes.FIRE)
+                {
+                    gameManager.SetProblemActive(true);
+                }
             }
         }
         
