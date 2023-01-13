@@ -8,6 +8,7 @@ public class FollowPlayer : MonoBehaviour
 
     // Serialized Fields for use in Unity
     [Header("Player information")]
+    [SerializeField] GameManager gameManager;
     [SerializeField] GameObject player;
     [SerializeField] Vector3 cameraOffsetPosition;
 
@@ -29,9 +30,13 @@ public class FollowPlayer : MonoBehaviour
     /// </summary>
     void Update()
     {
-        // follow the player at the given offset every frame
-        transform.position = player.transform.position + cameraOffsetPosition;
-        
+        // Only follow the player if we are not currently solving a problem
+        if (!gameManager.IsProblemActive() )
+        {
+            // follow the player at the given offset every frame
+            transform.position = player.transform.position + cameraOffsetPosition;
+        }
+
     } // end Update
 
 }

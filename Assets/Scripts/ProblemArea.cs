@@ -10,7 +10,7 @@ public class ProblemArea : MonoBehaviour
     [Header("Character controller")]
     [SerializeField] CharacterControllerRB characterController;
     [SerializeField] GameManager gameManager;
-    [SerializeField] GameManager.ProblemTypes problemType;
+    [SerializeField] ProblemTypes problemType;
 
     // public variables available to other scripts
     public GameObject problemToSolve;
@@ -36,7 +36,7 @@ public class ProblemArea : MonoBehaviour
             // some things need to happen if it is a UI puzzle type
             switch(problemType)
             {
-                case GameManager.ProblemTypes.FIX_WIRES:
+                case ProblemTypes.FIX_WIRES:
                     if (characterController.isSolvingCablePuzzle)
                     {
                         // turn off the in game UI
@@ -45,7 +45,8 @@ public class ProblemArea : MonoBehaviour
                     }
                     break;
 
-                case GameManager.ProblemTypes.CODE_BREAKER:
+                case ProblemTypes.CODE_BREAKER:
+                case ProblemTypes.SIMON_SAYS:
                     if (characterController.isSolvingTerminalPuzzle)
                     {
                         // turn off the in game UI
@@ -54,9 +55,16 @@ public class ProblemArea : MonoBehaviour
                     }
                     break;
 
+                case ProblemTypes.ASTEROIDS:
+                    if (characterController.isPiloting)
+                    {
+                        startPuzzle = true;
+                    }
+                    break;
+
                 // default is to start the puzzle (for fire) as the player needs to walk there
-                default: 
-                    startPuzzle= true;
+                default:
+                    startPuzzle = true;
                     break;
             }
 
@@ -65,6 +73,12 @@ public class ProblemArea : MonoBehaviour
                 // set the problem as active
                 problemToSolve.SetActive(true);
                 hasProblem = false;
+
+                // set up the no follow cameara for most games (except fire)
+                if (problemType != ProblemTypes.FIRE)
+                {
+                    gameManager.SetProblemActive(true);
+                }
             }
         }
         
