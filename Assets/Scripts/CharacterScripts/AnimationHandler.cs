@@ -43,9 +43,9 @@ public class AnimationHandler : MonoBehaviour
 
 
     //--------------------
-    public bool standCheck;
-    public bool idleCheck;
-    public float timeCheck;
+    public bool inPilotingTransition;
+    public bool inPuzzleTransition;
+    public bool inTerminalTransition;
 
     //-----------------------------------------------
     private void Awake()
@@ -78,66 +78,13 @@ public class AnimationHandler : MonoBehaviour
 
 
         aimHeightBlendHash = Animator.StringToHash("aimHeightBlend");
-        
         //----------------------------------------------------------
-
 
     }
 
     //-----------------------------------------------
     private void FixedUpdate()
     {
-
-        //standCheck = animator.GetCurrentAnimatorStateInfo(0).IsName("Sit to Stand");
-        //idleCheck = animator.GetCurrentAnimatorStateInfo(0).IsName("Idle");
-        //Debug.Log(animator.IsInTransition(0));
-
-        //if (animator.GetCurrentAnimatorStateInfo(0).IsName("Sit to Stand"))
-        //{
-        //    timeCheck = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-        //}
-        //if (!characterController.isSitting)
-        //{
-        //    if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1 && !animator.IsInTransition(0))
-        //    {
-        //        characterController.isStanding = true;
-        //    }
-        //}
-     
-        // transition into aim
-        if (characterController.isAiming)
-        {
-            aimingBoolToFloat = 1f; 
-        }
-
-        //---------------------------------
-        // Reset Aim Position
-        if (!characterController.isAiming)
-        {
-            aimingBoolToFloat = 0f;
-            aimHeightBlendAmount = 1f;
-            animator.SetFloat(aimHeightBlendHash, aimHeightStartPosition);
-        }
-
-        float currentAimingLayerWeight = animator.GetLayerWeight(animator.GetLayerIndex("AimingLayer"));
-        aimingLayerWeight = Mathf.Lerp(currentAimingLayerWeight, aimingBoolToFloat, Time.fixedDeltaTime * 4f);
-        animator.SetLayerWeight(animator.GetLayerIndex("AimingLayer"), aimingLayerWeight);
-
-
-            if (aimHeightBlendAmount <= maxAim && aimHeightBlendAmount >= minAim)
-            {
-                if (controllerInputManager.isAimPressed)
-                {
-                    aimHeightBlendAmount += controllerInputManager.currentAim * (Time.fixedDeltaTime * aimSpeed);
-                    animator.SetFloat(aimHeightBlendHash, aimHeightBlendAmount);
-                }
-
-                if (aimHeightBlendAmount > maxAim) { aimHeightBlendAmount = maxAim; }
-                if (aimHeightBlendAmount < minAim) { aimHeightBlendAmount = minAim; }
-            }
-
-     
-
 
         //---------Constant checks need to control animator logic-----------------
         // set bool isGrounded in animator
@@ -149,10 +96,11 @@ public class AnimationHandler : MonoBehaviour
 
 
         //--------------------------Interaction Animations------------------------
+        handleAim();
         handlePuzzles();
         handlePilotAnimation();
 
-        // Movement animations
+        //-------------------------- Movement animations---------------------------
         handleMovementAnimation();
         handleJumpAnimation();
         //------------------------------------------------------------------------
@@ -181,8 +129,48 @@ public class AnimationHandler : MonoBehaviour
     //-----------------------------------------------
     private void handlePilotAnimation()
     {
+        //-----------------------------------------------------------------
         // set bool isSitting in animator
         animator.SetBool(isPilotingHash, characterController.isPiloting);
+
+
+        //-----------------------------------------------------------------
+        // Logic to check piloting animation state has finished
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Sit to Stand"))
+        {
+            inPilotingTransition = true;
+        }
+        else
+        {
+            inPilotingTransition = false;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Stand to Sit"))
+        {
+            inPilotingTransition = true;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Flip Switches High"))
+        {
+            inPilotingTransition = true;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Flip Switches Low"))
+        {
+            inPilotingTransition = true;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Piloting"))
+        {
+            inPilotingTransition = true;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Piloting 1"))
+        {
+            inPilotingTransition = true;
+        }
+        //-----------------------------------------------------------------
+
 
     }
 
@@ -194,6 +182,27 @@ public class AnimationHandler : MonoBehaviour
         //----------------------------------------------------------------------------------------
         // Solving cable puzzle animation
         animator.SetBool(isSolvingCablePuzzleHash, characterController.isSolvingCablePuzzle);
+
+        //-----------------------------------------------------------------
+        // Logic to check cable puzzle animation state has finished
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Crouch to Stand"))
+        {
+            inPuzzleTransition = true;
+        }
+        else
+        {
+            inPuzzleTransition = false;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Working on Device"))
+        {
+            inPuzzleTransition = true;
+        }
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Stand to Crouch"))
+        {
+            inPuzzleTransition = true;
+        }
 
 
         //----------------------------------------------------------------------------------------
@@ -213,6 +222,42 @@ public class AnimationHandler : MonoBehaviour
         terminalLayerWeight = Mathf.Lerp(currentTerminalLayerWeight, terminalBoolToFloat, Time.fixedDeltaTime * 1.8f);
 
         animator.SetLayerWeight(animator.GetLayerIndex("TerminalPuzzleLayer"), terminalLayerWeight);
+    }
+
+    //-----------------------------------------------
+    private void handleAim()
+    {
+        // transition into aim
+        if (characterController.isAiming)
+        {
+            aimingBoolToFloat = 1f;
+        }
+
+        //---------------------------------
+        // Reset Aim Position
+        if (!characterController.isAiming)
+        {
+            aimingBoolToFloat = 0f;
+            aimHeightBlendAmount = 1f;
+            animator.SetFloat(aimHeightBlendHash, aimHeightStartPosition);
+        }
+
+        float currentAimingLayerWeight = animator.GetLayerWeight(animator.GetLayerIndex("AimingLayer"));
+        aimingLayerWeight = Mathf.Lerp(currentAimingLayerWeight, aimingBoolToFloat, Time.fixedDeltaTime * 4f);
+        animator.SetLayerWeight(animator.GetLayerIndex("AimingLayer"), aimingLayerWeight);
+
+
+        if (aimHeightBlendAmount <= maxAim && aimHeightBlendAmount >= minAim)
+        {
+            if (controllerInputManager.isAimPressed)
+            {
+                aimHeightBlendAmount += controllerInputManager.currentAim * (Time.fixedDeltaTime * aimSpeed);
+                animator.SetFloat(aimHeightBlendHash, aimHeightBlendAmount);
+            }
+
+            if (aimHeightBlendAmount > maxAim) { aimHeightBlendAmount = maxAim; }
+            if (aimHeightBlendAmount < minAim) { aimHeightBlendAmount = minAim; }
+        }
     }
 
 
