@@ -6,12 +6,12 @@ using UnityEngine;
 public class ShootAsteroids : MonoBehaviour
 {
     // constant values
-    private const float CAMERA_SPEED = 1.0f;                    // the speed to move the camera in
+    private const float CAMERA_SPEED = 2.0f;                    // the speed to move the camera in
     private const float SPAWN_OFSET = 5;                        // the offset for the asteroids to spawn on screen
     private const float MIN_TIME_BETWEEN_SPAWN = 0.25f;         // the minimum time between spawns - for timer
     private const float MAX_TIME_BETWEEN_SPAWN = 1.5f;          // the maximum time between spawns - for timer
-    private const int MIN_NUM_ASTERIODS = 5;                    // The minimum number of asteroids to spawn for each game
-    private const int MAX_NUM_ASTERIODS = 16;                   // The maximum number of asteroids to spawn for each game
+    private const int MIN_NUM_ASTERIODS = 10;                   // The minimum number of asteroids to spawn for each game
+    private const int MAX_NUM_ASTERIODS = 25;                   // The maximum number of asteroids to spawn for each game
 
     // serialized variables
     [SerializeField] GameManager gameManager;                   // a link to the game manager to set problem as solved
@@ -35,7 +35,6 @@ public class ShootAsteroids : MonoBehaviour
     void OnEnable()
     {
         // set up the basic fire system variables
-        timer = Random.Range(MIN_TIME_BETWEEN_SPAWN, MAX_TIME_BETWEEN_SPAWN);
         numAsteroidsPerGame = Random.Range(MIN_NUM_ASTERIODS, MAX_NUM_ASTERIODS);
         numAsteroidsRemaining = numAsteroidsPerGame;
         asteroidsDone = false;
@@ -48,11 +47,8 @@ public class ShootAsteroids : MonoBehaviour
         targetCameraRotation = cameraPosition.transform.rotation;
         cameraMoving = true;
 
-        // for now just move the camera (pop it there - will need to fix)
-        cameraToMove.gameObject.transform.SetPositionAndRotation(targetCameraPosition, targetCameraRotation);
-
-        // activate the first fire prefab
-        Invoke("SpawnAsteroid", 2);
+        // Set camera pan up to smoothly rotate in
+        StartCoroutine(MoveCameraToPosition() );
 
     } // end OnEnable
 
@@ -64,7 +60,7 @@ public class ShootAsteroids : MonoBehaviour
         // want to move the camera smoothly - need to fix
         //MoveCameraToPosition();
 
-        if (!asteroidsDone)
+        if (!asteroidsDone && !cameraMoving)
         {
             // only spawn asteroids if there are still some to spawn
             if (numAsteroidsPerGame > 0)
@@ -78,7 +74,6 @@ public class ShootAsteroids : MonoBehaviour
                 else
                 {
                     SpawnAsteroid();
-                    timer = Random.Range(MIN_TIME_BETWEEN_SPAWN, MAX_TIME_BETWEEN_SPAWN); ;
                 }
             }
             else
@@ -92,13 +87,8 @@ public class ShootAsteroids : MonoBehaviour
                     asteroidsDone = true;
                     cameraMoving = true;
 
-                    // pop the camera back for now
-                    cameraToMove.gameObject.transform.SetPositionAndRotation(targetCameraPosition, targetCameraRotation);
-
-                    // make sure to disable the area, or it won't start the game the second time
-                    // TODO: may need to move this into the camera movement method
-                    gameManager.MarkProblemSolved();
-                    this.gameObject.SetActive(false);
+                    // Smoothly move the camera back
+                    StartCoroutine(MoveCameraToPosition() );
                 }
             }
         }
@@ -117,27 +107,40 @@ public class ShootAsteroids : MonoBehaviour
     /// <summary>
     /// Moves the camera from the target point to the position - may need to be IEnumerated
     /// </summary>
-    private void MoveCameraToPosition()
+    private IEnumerator MoveCameraToPosition()
     {
+        Vector3 fromPosition = cameraToMove.transform.position;
+        Quaternion fromRotation = cameraToMove.transform.rotation;
+
         // attempting to move the camera to the correct position over time - rotation not here will need to figure it out
-        if (cameraMoving)
+        for (float time = 0; time < CAMERA_SPEED; time += Time.deltaTime)
         {
-            cameraToMove.gameObject.transform.position = Vector3.Lerp(transform.position, targetCameraPosition, CAMERA_SPEED * Time.deltaTime);
-            cameraToMove.gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, targetCameraRotation, CAMERA_SPEED * Time.deltaTime);
+            cameraToMove.gameObject.transform.position = Vector3.Lerp(fromPosition, targetCameraPosition, (time / CAMERA_SPEED) );
+            cameraToMove.gameObject.transform.rotation = Quaternion.Slerp(fromRotation, targetCameraRotation, (time / CAMERA_SPEED) );
 
-            if (cameraToMove.gameObject.transform.position == targetCameraPosition)
-            {
-                cameraMoving = false;
-
-                if (asteroidsDone)
-                {
-                    gameManager.MarkProblemSolved();
-                    this.gameObject.SetActive(false);
-                }
-            }
+            yield return 0;
         }
 
-    }
+        // make sure the camera is set to the target position/rotation (there may be rounding issues with Lerp and Slerp)
+        cameraToMove.gameObject.transform.position = targetCameraPosition;
+        cameraToMove.gameObject.transform.rotation = targetCameraRotation;
+
+        // if this is the pan out, end the game
+        if (asteroidsDone)
+        {
+            gameManager.MarkProblemSolved();
+            this.gameObject.SetActive(false);
+
+        }
+        // otherwise set up the first asteroid spawn
+        else
+        {
+            timer = Random.Range(MIN_TIME_BETWEEN_SPAWN, MAX_TIME_BETWEEN_SPAWN);
+        }
+
+        cameraMoving = false;
+
+    } // end MoveCameraToPosition
 
     /// <summary>
     /// Creates an instance of the fire based off the last fire placed and adds one to the fire cout
@@ -161,6 +164,9 @@ public class ShootAsteroids : MonoBehaviour
 
         // remove the asteroids from the total count
         numAsteroidsPerGame--;
+
+        // set the timer for the next one
+        timer = Random.Range(MIN_TIME_BETWEEN_SPAWN, MAX_TIME_BETWEEN_SPAWN);
 
     } // end CreateFire
 
