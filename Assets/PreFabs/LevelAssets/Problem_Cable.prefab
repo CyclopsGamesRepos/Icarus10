@@ -56,8 +56,9 @@ GameObject:
   - component: {fileID: 1498894357172278075}
   - component: {fileID: 2549881731160759454}
   - component: {fileID: 325957529387968596}
+  - component: {fileID: -4949999789815941878}
   m_Layer: 0
-  m_Name: CablePuzzle
+  m_Name: Problem_Cable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -131,6 +132,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-4949999789815941878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2271772259492759937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2405cb6a2bf613e4ba1220b1a6a49cbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterController: {fileID: 0}
+  gameManager: {fileID: 0}
+  problemMaterial: {fileID: 2100000, guid: fd9587c4bacea584e9b8fc103803ae86, type: 2}
+  problemType: 0
+  problemToSolve: {fileID: 0}
+  hasProblem: 0
 --- !u!1 &4088892171761559311
 GameObject:
   m_ObjectHideFlags: 0

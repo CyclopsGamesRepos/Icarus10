@@ -16,7 +16,6 @@ public class ShootAsteroids : MonoBehaviour
     // serialized variables
     [SerializeField] GameManager gameManager;                   // a link to the game manager to set problem as solved
     [SerializeField] GameObject cameraToMove;                   // a link to the camera so we can move it into position and back
-    [SerializeField] Transform cameraPosition;                  // where to put the camera when the game starts
     [SerializeField] GameObject asteroidPrefab;                 // a link to the fire object to create 
     [SerializeField] GameObject spawnPoint;                     // the area around where the asteroids will spawn
 
@@ -43,8 +42,8 @@ public class ShootAsteroids : MonoBehaviour
         originalCameraPosition = cameraToMove.transform.position;
         originalCameraRotation = cameraToMove.transform.rotation;
 
-        targetCameraPosition = cameraPosition.transform.position;
-        targetCameraRotation = cameraPosition.transform.rotation;
+        targetCameraPosition = gameObject.transform.position;
+        targetCameraRotation = gameObject.transform.rotation;
         cameraMoving = true;
 
         // Set camera pan up to smoothly rotate in
@@ -151,7 +150,7 @@ public class ShootAsteroids : MonoBehaviour
         Vector3 spawnPos = spawnPoint.transform.position;
 
         // randomize each coordinate
-        float xPos = spawnPos.x + Random.Range(-SPAWN_OFSET, SPAWN_OFSET);
+        float xPos = spawnPos.x + Random.Range(-(SPAWN_OFSET * 2), (SPAWN_OFSET * 2) );
         float yPos = spawnPos.y + Random.Range(-SPAWN_OFSET, SPAWN_OFSET);
         float zPos = spawnPos.z + Random.Range(-SPAWN_OFSET, SPAWN_OFSET);
 
