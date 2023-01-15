@@ -5,8 +5,8 @@ using UnityEngine;
 public class AsteroidMovement : MonoBehaviour
 {
     // constant values
-    private const float MIN_IMPULSE_FORCE = 50f;                // the minimum force to apply to the asteroid
-    private const float MAX__IMPULSE_FORCE = 150f;              // the maximum force to apply to the asteroid
+    private const float MIN_IMPULSE_FORCE = 100f;               // the minimum force to apply to the asteroid
+    private const float MAX__IMPULSE_FORCE = 250f;              // the maximum force to apply to the asteroid
     private const int LIFE_TIME = 5;                            // the time this asteroid will be around
     private const int TIME_TO_LOSE = 5;                         // the time to lose if the asteroid is missed
 

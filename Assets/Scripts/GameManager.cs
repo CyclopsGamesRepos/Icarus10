@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
 
     // An array to track the problems
     [Header("Problem Game Locations and material")]
-    [SerializeField] Material problemMaterial;                          // the material to set up when there is a problem
     [SerializeField] GameObject[] wireProblemAreas;                     // objects that can have the wire problem spring up
     [SerializeField] GameObject[] codeProblemAreas;                     // objects that can have the code problem spring up
     [SerializeField] GameObject[] fireProblemAreas;                     // objects that can have the fire problem spring up
@@ -53,7 +52,6 @@ public class GameManager : MonoBehaviour
 
     // Private variables
     private GameObject[][] problemAreas;                                // the list of possilble places for each problem
-    private Material originalMaterial;                                  // the original material of the problem area
     private float gameTimer;                                            // to keep track of the game time for end game
     private float problemTimer;                                         // keeps track of time to next problem
     private bool problemStarted = false;                                // to keep track of when problems occur and to reset timer
@@ -189,7 +187,7 @@ public class GameManager : MonoBehaviour
         SetProblemActive(false);
 
         // put the original material back on the object
-        problemAreas[currentProblemType][currentProblemLocation].GetComponent<MeshRenderer>().material = originalMaterial;
+        problemAreas[currentProblemType][currentProblemLocation].GetComponent<ProblemArea>().UpdateMaterial();
 
         Debug.Log(NumProblemsFixed + " problems solved.");
 
@@ -241,17 +239,17 @@ public class GameManager : MonoBehaviour
             currentProblemType = Random.Range(0, numProblemTypes);
 
             // DEBUG: to test your specific problem, use the enum type here instead of the random one above (comment it out when done)
-            //currentProblemType = (int)ProblemTypes.ASTEROIDS;
+            //currentProblemType = (int)ProblemTypes.FIRE;
 
             // now randomize the next problem location
             currentProblemLocation = Random.Range(0, problemAreas[currentProblemType].Length);
 
-            // set the object there to the problem material to signify that it needs help (store the original material for later)
-            originalMaterial = problemAreas[currentProblemType][currentProblemLocation].GetComponent<MeshRenderer>().material;
-            problemAreas[currentProblemType][currentProblemLocation].GetComponent<MeshRenderer>().material = problemMaterial;
-
             // mark the problem area as having a problem
-            problemAreas[currentProblemType][currentProblemLocation].GetComponent<ProblemArea>().hasProblem = true;
+            ProblemArea prblemAreaScript = problemAreas[currentProblemType][currentProblemLocation].GetComponent<ProblemArea>();
+            prblemAreaScript.hasProblem = true;
+
+            // set the object there to the problem material to signify that it needs help (store the original material for later)
+            prblemAreaScript.UpdateMaterial();
 
         }
 
