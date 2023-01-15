@@ -48,6 +48,12 @@ public class CollisionManager : MonoBehaviour
                 inTerminalPuzzleZone = true;
             }
         }
+        else
+        {
+            inCockpitZone = false;
+            inCablePuzzleZone = false;
+            inTerminalPuzzleZone = false;
+        }
 
         //--------------------------------------
         if (other.gameObject.tag == "FireZone")
@@ -91,6 +97,12 @@ public class CollisionManager : MonoBehaviour
                 interactionAllowed = false;
                 inTerminalPuzzleZone = false;
             }
+        }
+        else
+        {
+            inCockpitZone = false;
+            inCablePuzzleZone = false;
+            inTerminalPuzzleZone = false;
         }
 
         //--------------------------------------
