@@ -14,7 +14,7 @@ public class SimonSays : MonoBehaviour
 
     // Constant values
     private const string NOPE_MESSAGE = "Try again";            // message if the player gets it wrong
-    private const string SUCCESS_MESSAGE = "You didi it!";      // message if they get it right
+    private const string SUCCESS_MESSAGE = "You did it!";      // message if they get it right
     private const float TIME_TO_SHOW = 1.0f;                    // time show the color of a pattern (use invoke to reset it?)
     private const float TIME_TO_PAUSE = 0.5f;                   // time to wait before showing next color (or after user enters it)
     private const float TIME_TO_RESET = 2.5f;                   // time to wait before showing next pattern
@@ -52,6 +52,7 @@ public class SimonSays : MonoBehaviour
 
         // reset the game buttons and initial text
         messageText.text = NOPE_MESSAGE;
+        messageArea.SetActive(false);
         doneButton.SetActive(false);
         problemSolved = false;
         patternShown = false;
