@@ -7,6 +7,7 @@ public class Lazer : MonoBehaviour
 {
     private ControllerInputManager input;
     private CharacterControllerRB controller;
+    private bool isShooting;
 
     // create list of child components
     [SerializeField] List<Transform> transformList;
@@ -119,12 +120,20 @@ public class Lazer : MonoBehaviour
     void enableLazer()
     {
         spawnedLazer.SetActive(true);
+
+        if (!isShooting)
+        {
+            GetComponent<AudioSource>().Play();
+            isShooting = true;
+        }
     }
 
     //--------------------------------
     void disableLazer()
     {
+        isShooting = false;
         spawnedLazer.SetActive(false);
+        GetComponent<AudioSource>().Stop();
     }
 
     //--------------------------------
