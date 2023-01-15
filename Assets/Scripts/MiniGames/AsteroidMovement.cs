@@ -7,17 +7,18 @@ public class AsteroidMovement : MonoBehaviour
     // constant values
     private const float MIN_IMPULSE_FORCE = 100f;               // the minimum force to apply to the asteroid
     private const float MAX__IMPULSE_FORCE = 250f;              // the maximum force to apply to the asteroid
-    private const int LIFE_TIME = 5;                            // the time this asteroid will be around
+    private const float HIT_SHIP_Z = -13.1f;                    // the time this asteroid will be around
     private const int TIME_TO_LOSE = 5;                         // the time to lose if the asteroid is missed
 
     // serialized variables
-    [SerializeField] GameManager gameManager;                   // a link to the game manager to update timer if the asteroid is missed
+    [SerializeField] AudioClip hitShip;                         // the audio clip to switch to if the asteroid hits the ship
 
     // public variables used by other scripts
-    public ShootAsteroids shootAsteroidsScript;
+    public ShootAsteroids shootAsteroidsScript;                 // a link back to the shoot asteroid script - set up from that script
 
     // private variables used by this script
-    private float lifeTimer;
+    private GameManager gameManager;                            // a link to the game manager to update timer if the asteroid is missed
+    private AudioSource asteroidAudioOutput;
     private bool beingDestroyed = false;
 
     /// <summary>
@@ -25,36 +26,32 @@ public class AsteroidMovement : MonoBehaviour
     /// </summary>
     void Start()
     {
-        // Add an impulse force for this astroid
+        // Add an impulse force for this astroid aftr it points towards the ship
+        transform.LookAt(shootAsteroidsScript.gameObject.transform);
         GetComponent<Rigidbody>().AddForce(Vector3.forward * Random.Range(MIN_IMPULSE_FORCE, MAX__IMPULSE_FORCE), ForceMode.Impulse);
 
         gameManager = GameObject.FindObjectOfType<GameManager>().GetComponent<GameManager>();
+        asteroidAudioOutput = GetComponent<AudioSource>();
 
-        // set up a timer
-        lifeTimer = LIFE_TIME;
-    }
+    } // end Start
 
     /// <summary>
     /// Update is called once per frame
     /// </summary>
     void Update()
     {
-        // count down the time
-        lifeTimer -= Time.deltaTime;
-
         // if the timer has run out, assume the asteroid hit the ship and take time away
-        if ( (lifeTimer < 0) && !beingDestroyed)
+        if ( (transform.position.z > HIT_SHIP_Z) && !beingDestroyed)
         {
+            // remove time and change the audio clip to play
             gameManager.AdjustGameTimer(-TIME_TO_LOSE);
+            asteroidAudioOutput.clip = hitShip;
 
             // Show particle system
-            gameObject.GetComponent<ParticleSystem>().Play();
-            Destroy(gameObject, 1.0f);
-            beingDestroyed = true;
-            shootAsteroidsScript.RemoveAsteroid();
+            DestroyAsteroid();
         }
         
-    }
+    } // end Update
 
     /// <summary>
     /// if the user clicks the asteroid, blow it up
@@ -63,11 +60,25 @@ public class AsteroidMovement : MonoBehaviour
     {
         if (!beingDestroyed)
         {
-            // Show particle system
-            gameObject.GetComponent<ParticleSystem>().Play();
-            beingDestroyed = true;
-            Destroy(gameObject, 1.0f);
-            shootAsteroidsScript.RemoveAsteroid();
+            shootAsteroidsScript.PlayLaserFire();
+            DestroyAsteroid();
         }
-    }
+
+    } // end OnMouseDown
+
+    /// <summary>
+    /// Destroys the asteroid with a particle effect and audio
+    /// </summary>
+    private void DestroyAsteroid()
+    {
+        // Show particle system and play audio clip
+        gameObject.GetComponent<ParticleSystem>().Play();
+        asteroidAudioOutput.Play();
+
+        // destroy the asteroid
+        beingDestroyed = true;
+        Destroy(gameObject, 1.0f);
+        shootAsteroidsScript.RemoveAsteroid();
+
+    } // end DestroyAsteroid
 }

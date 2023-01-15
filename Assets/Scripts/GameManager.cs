@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
 
     // Public variables
     public bool gameRunning = false;                                    // lets the game know we should count down the timer
+    public bool onFire = false;                                         // to let the controller system know not to allow other actions until fire is out
     public int currentProblemType;                                      // needed to put the material back to normal
     public int currentProblemLocation;                                  
 
@@ -55,7 +56,7 @@ public class GameManager : MonoBehaviour
     private float gameTimer;                                            // to keep track of the game time for end game
     private float problemTimer;                                         // keeps track of time to next problem
     private bool problemStarted = false;                                // to keep track of when problems occur and to reset timer
-    private bool problemActive = false;
+    private bool problemActive = false;                                 // used to stop follow camera when not in fire state
     private int numProblemsFixed = 0;                                   // keeps track of how many problems have been fixed to check on end game
     private int numProblemTypes;                                        // the total number of problem types for the problem arrays
 
@@ -239,7 +240,7 @@ public class GameManager : MonoBehaviour
             currentProblemType = Random.Range(0, numProblemTypes);
 
             // DEBUG: to test your specific problem, use the enum type here instead of the random one above (comment it out when done)
-            //currentProblemType = (int)ProblemTypes.FIRE;
+            currentProblemType = (int)ProblemTypes.ASTEROIDS;
 
             // now randomize the next problem location
             currentProblemLocation = Random.Range(0, problemAreas[currentProblemType].Length);

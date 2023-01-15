@@ -104,6 +104,14 @@ public class ShootAsteroids : MonoBehaviour
     } // end RemoveAsteroid
 
     /// <summary>
+    /// Plays the laser sound effect for firing - called by Asteroid
+    /// </summary>
+    public void PlayLaserFire()
+    {
+        GetComponent<AudioSource>().Play();
+    }
+
+    /// <summary>
     /// Moves the camera from the target point to the position - may need to be IEnumerated
     /// </summary>
     private IEnumerator MoveCameraToPosition()

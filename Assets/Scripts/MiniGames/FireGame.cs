@@ -15,6 +15,7 @@ public class FireGame : MonoBehaviour
 
     // private variables
     private List<GameObject> activeFires;
+    private AudioSource fireAudio;
     private float timer;
     private bool firesOut;
 
@@ -25,9 +26,14 @@ public class FireGame : MonoBehaviour
         activeFires = new List<GameObject>();
         timer = TIMER_TO_EXPAND;
         firesOut = false;
+        gameManager.onFire = true;
 
         // activate the first fire prefab
         CreateFire();
+
+        // start the audio for the fire
+        fireAudio = GetComponent<AudioSource>();
+        fireAudio.Play();
 
     } // end OnEnable
 
@@ -55,8 +61,10 @@ public class FireGame : MonoBehaviour
             {
                 gameManager.MarkProblemSolved();
                 firesOut = true;
+                gameManager.onFire = false;
 
                 // make sure to disable the area, or it won't start the game the second time
+                fireAudio.Stop();
                 this.gameObject.SetActive(false);
             }
         }
