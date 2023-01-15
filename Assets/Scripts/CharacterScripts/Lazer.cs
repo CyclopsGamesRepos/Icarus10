@@ -17,6 +17,9 @@ public class Lazer : MonoBehaviour
     [SerializeField] private GameObject LazerPrefab;
     [SerializeField] private LineRenderer linePos;
 
+    [SerializeField] private GameObject extinhuishPS;
+    [SerializeField] private GameObject sparkPS;
+
     private GameObject spawnedLazer;
 
 
@@ -76,19 +79,24 @@ public class Lazer : MonoBehaviour
                     {
                         hit.transform.SendMessage("hitDetected");
 
-                        Debug.Log(hit.collider.name);
+                        Debug.Log("Hit :" + hit.collider.name);
                         //--- draw debug target line form turret head to player postion
                         Debug.DrawRay(LazerPosition.position, LazerPosition.up, Color.red);
-              
+
+                        Instantiate(extinhuishPS, hit.point, Quaternion.Inverse(LazerPosition.rotation));
+
                     }
 
                     if (hit.transform.gameObject.tag == "LazerBorder")
                     {
                         
 
-                        Debug.Log(hit.collider.name);
+                        Debug.Log("Hit :" + hit.collider.name);
                         //--- draw debug target line form turret head to player postion
+
+                        Instantiate(sparkPS, hit.point, Quaternion.Inverse(LazerPosition.rotation) );
                         
+                       
 
                     }
 

@@ -1548,10 +1548,18 @@ MonoBehaviour:
   LazerPosition: {fileID: 0}
   LazerPrefab: {fileID: 8343817336350107770, guid: 7b7adc135bd336f44b1538f52115557a,
     type: 3}
+  linePos: {fileID: 0}
+  extinhuishPS: {fileID: 1771699868353826967, guid: 64c69e684af62684f80c125927ce5e65,
+    type: 3}
+  sparkPS: {fileID: 1771699868353826967, guid: b8384d2ba0d1de44fa276e107ab8badc, type: 3}
   hitDistance: 0
+  offsetAmount: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 512
+  layerMaskBorder:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &6426578957920267540
 MonoBehaviour:
   m_ObjectHideFlags: 0
