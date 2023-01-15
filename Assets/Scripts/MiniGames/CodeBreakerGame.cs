@@ -55,7 +55,6 @@ public class CodeBreakerGame : MonoBehaviour
         UpdateOnesValue();
 
         // reset the game buttons and initial text
-        messageText.text = NOPE_MESSAGE;
         checkCodeButton.SetActive(true);
         doneButton.SetActive(false);
         problemSolved = false;
@@ -88,7 +87,6 @@ public class CodeBreakerGame : MonoBehaviour
         if (userCode == randomCode)
         {
             messageText.text = SUCCESS_MESSAGE;
-            messageArea.SetActive(true);
             checkCodeButton.SetActive(false);
             doneButton.SetActive(true);
             problemSolved = true;
@@ -99,9 +97,10 @@ public class CodeBreakerGame : MonoBehaviour
         else
         {
             messageText.text = NOPE_MESSAGE;
-            messageArea.SetActive(true);
-            Invoke("TurnOffMessage", 2);
         }
+            
+        messageArea.SetActive(true);
+        Invoke("TurnOffMessage", 2);
     }
 
     /// <summary>

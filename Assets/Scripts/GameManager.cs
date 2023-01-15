@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public const string TIMER_TEXT = "Time until Impact: ";             // the default text for the timer when updated
     public const int TIME_TO_SUN = 600;                                 // seconds before the ship crashes into the sun - 600 is 10 minutes
     public const int TIME_TO_PROBLEM = 10;                              // seconds before the next problem happens
-    public const int NUM_PROBLEMS_TO_WIN = 15;                          // the number of problems that must be solved to beat the clock
+    public const int NUM_PROBLEMS_TO_WIN = 13;                          // the number of problems that must be solved to beat the clock
     public const string WIN_TEXT = "You did it!\n Time to go home.";    // the text if the player solves all the problems
 
     // Serialized variables
@@ -142,6 +142,7 @@ public class GameManager : MonoBehaviour
         }
 
         endMenu.SetActive(true);
+        GetComponent<AudioSource>().Play();
 
     } // end EndGame
 
