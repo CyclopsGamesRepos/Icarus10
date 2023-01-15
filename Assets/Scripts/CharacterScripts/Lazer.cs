@@ -14,11 +14,22 @@ public class Lazer : MonoBehaviour
     // get / set transforms
     [SerializeField] private Transform getLazerTransform;
     [SerializeField] private Transform LazerPosition;
+    [SerializeField] private GameObject LazerPrefab;
+    [SerializeField] private LineRenderer linePos;
+
+    [SerializeField] private GameObject extinhuishPS;
+    [SerializeField] private GameObject sparkPS;
+
+    private GameObject spawnedLazer;
+
 
     [SerializeField] float hitDistance;
 
+    [SerializeField] float offsetAmount;
+
     // set mask 
     [SerializeField] LayerMask layerMask;
+    [SerializeField] LayerMask layerMaskBorder;
 
     //-------------------------------
     private void Awake()
@@ -32,6 +43,11 @@ public class Lazer : MonoBehaviour
         // assign transforms
         getLazerTransform = transformList[48];
         LazerPosition = transformList[71];
+
+        spawnedLazer = Instantiate(LazerPrefab, LazerPosition) as GameObject;
+        linePos = spawnedLazer.gameObject.GetComponentInChildren<LineRenderer>();
+
+        disableLazer();
     }
 
     //--------------------------------
@@ -50,6 +66,12 @@ public class Lazer : MonoBehaviour
                 //--- draw debug target line form turret head to player postion
                 Debug.DrawRay(LazerPosition.position, LazerPosition.up, Color.yellow);
 
+                enableLazer();
+                updateLazer();
+
+
+                //-----------------------------------------------------------------------------------------------------------------------
+                // this raycast will only hit the fire
                 RaycastHit hit;
                 if (Physics.Raycast(LazerPosition.position, LazerPosition.up, out hit, Mathf.Infinity, LayerMask.GetMask("LazerReciever")))
                 {
@@ -57,14 +79,71 @@ public class Lazer : MonoBehaviour
                     {
                         hit.transform.SendMessage("hitDetected");
 
+                        Debug.Log("Hit :" + hit.collider.name);
                         //--- draw debug target line form turret head to player postion
                         Debug.DrawRay(LazerPosition.position, LazerPosition.up, Color.red);
+
+                        Instantiate(extinhuishPS, hit.point, Quaternion.Inverse(LazerPosition.rotation));
+
                     }
-                }
+
+                    if (hit.transform.gameObject.tag == "LazerBorder")
+                    {
+                        
+
+                        Debug.Log("Hit :" + hit.collider.name);
+                        //--- draw debug target line form turret head to player postion
+
+                        Instantiate(sparkPS, hit.point, Quaternion.Inverse(LazerPosition.rotation) );
+                        
+                       
+
+                    }
+
+                    linePos.SetPosition(1, new Vector3(0, hit.distance, 0));
+
+                } 
+
+            }
+
+            if (!input.isShootPressed)
+            {
+                disableLazer();
             }
         }
 
     }
+
+
+    //--------------------------------
+    void enableLazer()
+    {
+        spawnedLazer.SetActive(true);
+    }
+
+    //--------------------------------
+    void disableLazer()
+    {
+        spawnedLazer.SetActive(false);
+    }
+
+    //--------------------------------
+    void updateLazer()
+    {
+        if (LazerPosition != null)
+        {
+            //Vector3 offsetPosition = new Vector3(LazerPosition.position.x, LazerPosition.position.y, LazerPosition.position.z).normalized;
+            
+            spawnedLazer.transform.position = LazerPosition.position;
+            //spawnedLazer.transform.rotation = LazerPosition.transform.rotation;
+            // set the position of the laser
+
+            //Debug.Log(LazerPosition.position);
+           
+
+        }
+    }
+
 
 
     //--------------------------------
