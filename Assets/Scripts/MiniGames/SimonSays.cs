@@ -92,6 +92,8 @@ public class SimonSays : MonoBehaviour
         userChoicePatternIndex = currentPatternIndex;
         Invoke("ResetAlpha", TIME_TO_PAUSE);
 
+        GetComponent<AudioSource>().Play();
+
         // check the color compared to the one on the list
         if (colorAttempted == colorValues[currentPatternIndex])
         {

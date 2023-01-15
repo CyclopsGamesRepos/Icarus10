@@ -7,16 +7,17 @@ using UnityEngine.UI;
 public class Wires : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     // serialized variables for ease of access
-    [SerializeField] Canvas parentCanvas;   // the main canvas (may need to make this a sub canvas or separate one for mini games)
-    [SerializeField] WireGame wireGame;     // a link back to the main wire game so we can set which wires are being touched
+    [SerializeField] Canvas parentCanvas;           // the main canvas (may need to make this a sub canvas or separate one for mini games)
+    [SerializeField] WireGame wireGame;             // a link back to the main wire game so we can set which wires are being touched
 
     // public variables
-    public Image wireImage;                 // The image used by this wire
-    public bool isConnected = false;        // to keep track of the wire if it is connected
+    public Image wireImage;                         // The image used by this wire
+    public bool isConnected = false;                // to keep track of the wire if it is connected
 
     // private variables
-    private LineRenderer wireLine;          // the renderer we will use for this line to show the wire being fixed
-    private bool beingDragged = false;      // is the wire currently being dragged with the mouse
+    private LineRenderer wireLine;                  // the renderer we will use for this line to show the wire being fixed
+    private AudioSource connectSound;               // the sound to play when the wires are connected
+    private bool beingDragged = false;              // is the wire currently being dragged with the mouse
 
     /// <summary>
     /// OnEnable is called when the object is created and every time it is enabled
@@ -26,6 +27,7 @@ public class Wires : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         // set up the variables for this wire
         wireImage = GetComponent<Image>();
         wireLine = GetComponent<LineRenderer>();
+        connectSound = GetComponent<AudioSource>();
 
         // reset the wire
         wireLine.SetPosition(0, Vector3.zero);
@@ -108,7 +110,7 @@ public class Wires : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     public void OnEndDrag(PointerEventData eventData)
     {
         // when ending the drag, check to see if the colors match
-        if ( (wireGame.mouseOverWire != null) && !isConnected)
+        if ( (wireGame.mouseOverWire != null) && (wireGame.mouseOverWire != this) && !isConnected)
         {
             if (wireGame.mouseOverWire.wireImage.color == wireImage.color)
             {
@@ -116,6 +118,8 @@ public class Wires : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
                 isConnected = true;
                 wireGame.mouseOverWire.isConnected = true;
                 wireGame.wiresToConnect--;
+
+                connectSound.Play();
             }
         }
 

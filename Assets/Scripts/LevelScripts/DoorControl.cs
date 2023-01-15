@@ -42,6 +42,7 @@ public class DoorControl : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             isOpening = true;
+            GetComponent<AudioSource>().Play();
         }
     }
 

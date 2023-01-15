@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3195927599086894133}
   - component: {fileID: 1382535277787689392}
   - component: {fileID: 7974506157107308671}
+  - component: {fileID: 1398766895581826973}
   m_Layer: 0
   m_Name: FireZoneCollision
   m_TagString: FireZone
@@ -149,6 +150,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 2.24, z: 0.25}
   m_Center: {x: 0, y: 1.4, z: -4.43}
+
 --- !u!1 &7715793326138567438
 GameObject:
   m_ObjectHideFlags: 0
