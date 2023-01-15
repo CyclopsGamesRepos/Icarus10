@@ -1546,6 +1546,8 @@ MonoBehaviour:
   transformList: []
   getLazerTransform: {fileID: 0}
   LazerPosition: {fileID: 0}
+  LazerPrefab: {fileID: 8343817336350107770, guid: 7b7adc135bd336f44b1538f52115557a,
+    type: 3}
   hitDistance: 0
   layerMask:
     serializedVersion: 2
