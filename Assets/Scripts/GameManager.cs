@@ -84,6 +84,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Update()
     {
+
+
         if (gameRunning)
         {
             // as long as there is time left, conintue the game
@@ -240,8 +242,11 @@ public class GameManager : MonoBehaviour
             // randomize the next problem type
             currentProblemType = Random.Range(0, numProblemTypes);
 
+
+
             // DEBUG: to test your specific problem, use the enum type here instead of the random one above (comment it out when done)
-            //currentProblemType = (int)ProblemTypes.FIRE;
+            //currentProblemType = (int)ProblemTypes.ASTEROIDS;
+        
 
             // now randomize the next problem location
             currentProblemLocation = Random.Range(0, problemAreas[currentProblemType].Length);
