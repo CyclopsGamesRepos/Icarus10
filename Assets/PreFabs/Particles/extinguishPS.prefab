@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8075326327274893576}
   - component: {fileID: 6094815094137606820}
   - component: {fileID: 3115681001351427842}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: extinguishPS
   m_TagString: Untagged
   m_Icon: {fileID: 0}

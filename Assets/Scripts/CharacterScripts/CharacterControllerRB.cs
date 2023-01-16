@@ -145,7 +145,7 @@ public class CharacterControllerRB : MonoBehaviour
                 if (!animationHandler.inPilotingTransition && !animationHandler.inPuzzleTransition)
                 {
                     // Action Movement
-                    handleJump();       // jump
+                    //handleJump();       // jump
                     handleCrouch();     // crouch
 
                     // Basic Movement
