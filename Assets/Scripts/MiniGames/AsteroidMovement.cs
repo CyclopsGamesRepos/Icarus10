@@ -7,7 +7,7 @@ public class AsteroidMovement : MonoBehaviour
     // constant values
     private const float MIN_IMPULSE_FORCE = 100f;               // the minimum force to apply to the asteroid
     private const float MAX__IMPULSE_FORCE = 250f;              // the maximum force to apply to the asteroid
-    private const float HIT_SHIP_Z = -13.1f;                    // the time this asteroid will be around
+    private const float HIT_SHIP_Z = -13.5f;                    // the position where the asteroid "hits" the ship
     private const int TIME_TO_LOSE = 5;                         // the time to lose if the asteroid is missed
 
     // serialized variables

@@ -159,7 +159,7 @@ public class ShootAsteroids : MonoBehaviour
 
         // randomize each coordinate
         float xPos = spawnPos.x + Random.Range(-(SPAWN_OFSET * 2), (SPAWN_OFSET * 2) );
-        float yPos = spawnPos.y + Random.Range(-SPAWN_OFSET, SPAWN_OFSET);
+        float yPos = spawnPos.y + Random.Range(0, SPAWN_OFSET);
         float zPos = spawnPos.z + Random.Range(-SPAWN_OFSET, SPAWN_OFSET);
 
         spawnPos = new Vector3(xPos, yPos, zPos);
