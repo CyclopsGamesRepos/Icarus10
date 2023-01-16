@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+//problem 3 asteroid
+//problem 4 terminal far right
+
 public class CollisionManager : MonoBehaviour
 {
     // serialized variables
@@ -24,7 +27,7 @@ public class CollisionManager : MonoBehaviour
             //--------------------------------------
             if (other.gameObject.tag == "PilotZone")
             {
-                Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
+                //Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
 
                 interactionAllowed = true;
                 inCockpitZone = true;
@@ -33,7 +36,7 @@ public class CollisionManager : MonoBehaviour
             //--------------------------------------
             if (other.gameObject.tag == "CablePuzzleZone")
             {
-                Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
+                //Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
 
                 interactionAllowed = true;
                 inCablePuzzleZone = true;
@@ -42,7 +45,7 @@ public class CollisionManager : MonoBehaviour
             //--------------------------------------
             if (other.gameObject.tag == "TerminalPuzzleZone")
             {
-                Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
+                //Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
 
                 interactionAllowed = true;
                 inTerminalPuzzleZone = true;
@@ -58,7 +61,7 @@ public class CollisionManager : MonoBehaviour
         //--------------------------------------
         if (other.gameObject.tag == "FireZone")
         {
-            Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
+            //Debug.Log("Entered: " + other.gameObject.tag + " | Press " + "'" + "e" + "'" + " to interact.");
 
             interactionAllowed = true;
             inFireZone = true;
@@ -74,7 +77,7 @@ public class CollisionManager : MonoBehaviour
             //--------------------------------------
             if (other.gameObject.tag == "PilotZone")
             {
-                Debug.Log("Exited: " + other.gameObject.tag);
+                //Debug.Log("Exited: " + other.gameObject.tag);
 
                 interactionAllowed = false;
                 inCockpitZone = false;
@@ -83,7 +86,7 @@ public class CollisionManager : MonoBehaviour
             //--------------------------------------
             if (other.gameObject.tag == "CablePuzzleZone")
             {
-                Debug.Log("Exited: " + other.gameObject.tag);
+                //Debug.Log("Exited: " + other.gameObject.tag);
 
                 interactionAllowed = false;
                 inCablePuzzleZone = false;
@@ -92,7 +95,7 @@ public class CollisionManager : MonoBehaviour
             //--------------------------------------
             if (other.gameObject.tag == "TerminalPuzzleZone")
             {
-                Debug.Log("Exited: " + other.gameObject.tag);
+                //Debug.Log("Exited: " + other.gameObject.tag);
 
                 interactionAllowed = false;
                 inTerminalPuzzleZone = false;
@@ -108,7 +111,7 @@ public class CollisionManager : MonoBehaviour
         //--------------------------------------
         if (other.gameObject.tag == "FireZone")
         {
-            Debug.Log("Exited: " + other.gameObject.tag);
+            //Debug.Log("Exited: " + other.gameObject.tag);
 
             interactionAllowed = false;
             inFireZone = false;

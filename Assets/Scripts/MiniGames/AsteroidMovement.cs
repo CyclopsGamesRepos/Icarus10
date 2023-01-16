@@ -21,6 +21,18 @@ public class AsteroidMovement : MonoBehaviour
     private AudioSource asteroidAudioOutput;
     private bool beingDestroyed = false;
 
+    // laser beam variables
+    private GameObject laserTurret;
+
+    private GameObject spawnedLazer;
+    [SerializeField] private GameObject LazerPrefab;
+    [SerializeField] private LineRenderer linePos;
+
+    private float rotX;
+    private float rotY;
+    private float rotZ;
+    
+
     /// <summary>
     /// Start is called before the first frame update
     /// </summary>
@@ -33,6 +45,21 @@ public class AsteroidMovement : MonoBehaviour
         gameManager = GameObject.FindObjectOfType<GameManager>().GetComponent<GameManager>();
         asteroidAudioOutput = GetComponent<AudioSource>();
 
+        // laser from position
+        laserTurret = GameObject.FindGameObjectWithTag("LaserTurret");
+
+        spawnedLazer = Instantiate(LazerPrefab, laserTurret.transform) as GameObject;
+        linePos = spawnedLazer.gameObject.GetComponent<LineRenderer>();
+
+        disableLazer();
+
+        rotX = Random.Range(-.05f, .05f);
+        rotY = Random.Range(-.05f, .05f);
+        rotZ = Random.Range(-.05f, .05f);
+
+        
+       gameObject.transform.localScale = new Vector3(Random.Range(.5f, 1.5f), Random.Range(.5f, 1.5f), Random.Range(.1f, 1.5f));
+
     } // end Start
 
     /// <summary>
@@ -40,6 +67,9 @@ public class AsteroidMovement : MonoBehaviour
     /// </summary>
     void Update()
     {
+
+        gameObject.transform.Rotate(rotX, rotY, rotZ);
+
         // if the timer has run out, assume the asteroid hit the ship and take time away
         if ( (transform.position.z > HIT_SHIP_Z) && !beingDestroyed)
         {
@@ -58,13 +88,31 @@ public class AsteroidMovement : MonoBehaviour
     /// </summary>
     private void OnMouseDown()
     {
+        enableLazer();
+        spawnedLazer.transform.position = laserTurret.transform.position;
+        linePos.SetPosition(0, gameObject.transform.position);
+        linePos.SetPosition(1, laserTurret.transform.position);
+       
+
+
         if (!beingDestroyed)
         {
+            // set laser position here
+            // asteroid position gameObject.transform.position
+            
             shootAsteroidsScript.PlayLaserFire();
             DestroyAsteroid();
         }
 
     } // end OnMouseDown
+
+
+    //------------------------------
+    private void OnMouseUp()
+    {
+        //when mouse is realeased disable the laser
+        disableLazer();
+    }
 
     /// <summary>
     /// Destroys the asteroid with a particle effect and audio
@@ -73,6 +121,8 @@ public class AsteroidMovement : MonoBehaviour
     {
         // Show particle system and play audio clip
         gameObject.GetComponent<ParticleSystem>().Play();
+
+
         asteroidAudioOutput.Play();
 
         // destroy the asteroid
@@ -81,4 +131,25 @@ public class AsteroidMovement : MonoBehaviour
         shootAsteroidsScript.RemoveAsteroid();
 
     } // end DestroyAsteroid
+
+
+    //Laser Turret functions
+    //--------------------------------
+    void enableLazer()
+    {
+        spawnedLazer.SetActive(true);
+    }
+
+    //--------------------------------
+    void disableLazer()
+    {
+        spawnedLazer.SetActive(false);   
+    }
+
+    //--------------------------------
+    void updateLazer()
+    {
+       // spawnedLazer.transform.position = laserTurret.transform.position;
+
+    }
 }

@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LaserMat
+  m_Name: LaserTurretMat
   m_Shader: {fileID: -6465566751694194690, guid: 0ed580bfcd2ef1d429ecdae96d410b43,
     type: 3}
   m_ValidKeywords: []
@@ -50,7 +50,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _Color: {r: 0, g: 2.2773438, b: 1024, a: 1}
+    - _Color: {r: 4.388011, g: 4.388011, b: 4.388011, a: 1}
     - _MainSpeed: {r: -0.5, g: 0, b: 0, a: 0}
     - _NoiseSpeed: {r: -1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

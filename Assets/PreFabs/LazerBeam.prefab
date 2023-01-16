@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1667392447731153023}
   - component: {fileID: 1824849767238204647}
   - component: {fileID: 7611614907974341349}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4880,7 +4880,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3373338885761862884}
   - component: {fileID: 2500969107097559346}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LazerBeam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4963,13 +4963,13 @@ LineRenderer:
         inWeight: 0.33333334
         outWeight: 0.12472928
       - serializedVersion: 3
-        time: 0.9454547
-        value: 0.59883404
-        inSlope: 2.282234
-        outSlope: 2.282234
+        time: 0.9613544
+        value: 0.37383556
+        inSlope: 0.50403637
+        outSlope: 0.50403637
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.13896477
+        inWeight: 0.11110253
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -4977,7 +4977,7 @@ LineRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 0, g: 0.09095059, b: 0.735849, a: 1}
-      key1: {r: 1, g: 0, b: 0, a: 1}
+      key1: {r: 0.46226418, g: 0.46226418, b: 0.46226418, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}

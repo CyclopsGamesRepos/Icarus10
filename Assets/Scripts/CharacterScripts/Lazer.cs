@@ -65,7 +65,7 @@ public class Lazer : MonoBehaviour
             if (input.isShootPressed) // check if controlelr inpur nhas been pressed
             {
                 //--- draw debug target line form turret head to player postion
-                Debug.DrawRay(LazerPosition.position, LazerPosition.up, Color.yellow);
+                //Debug.DrawRay(LazerPosition.position, LazerPosition.up, Color.yellow);
 
                 enableLazer();
                 updateLazer();
@@ -80,9 +80,9 @@ public class Lazer : MonoBehaviour
                     {
                         hit.transform.SendMessage("hitDetected");
 
-                        Debug.Log("Hit :" + hit.collider.name);
+                        //Debug.Log("Hit :" + hit.collider.name);
                         //--- draw debug target line form turret head to player postion
-                        Debug.DrawRay(LazerPosition.position, LazerPosition.up, Color.red);
+                        //Debug.DrawRay(LazerPosition.position, LazerPosition.up, Color.red);
 
                         Instantiate(extinhuishPS, hit.point, Quaternion.Inverse(LazerPosition.rotation));
 
@@ -92,7 +92,7 @@ public class Lazer : MonoBehaviour
                     {
                         
 
-                        Debug.Log("Hit :" + hit.collider.name);
+                        //Debug.Log("Hit :" + hit.collider.name);
                         //--- draw debug target line form turret head to player postion
 
                         Instantiate(sparkPS, hit.point, Quaternion.Inverse(LazerPosition.rotation) );
