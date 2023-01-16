@@ -8,7 +8,7 @@ public class CodeBreakerGame : MonoBehaviour
 {
     // Constant values
     public const string NOPE_MESSAGE = "Try again";             // message if the player gets it wrong
-    public const string SUCCESS_MESSAGE = "You didi it!";       // message if they get it right
+    public const string SUCCESS_MESSAGE = "You did it!";       // message if they get it right
     public const float FADE_INCREMENT = 0.1f;                   // the amount to increase the alpha fade of the actual code
     public const float TIME_TO_FADE = 0.5f;                     // time between fade in of actual code
     public const int MAX_CODE_VALUE = 1000;                     // used for generating the code, currently just three digits
